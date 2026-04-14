@@ -1,6 +1,4 @@
-Anladım — tarih seçilince saat de aynı kartın içinde açılsın, aşağı kaymadan. Hizmet kartı içinde: fotoğraf → tarih takvimi → saat seçimi, hepsi tek kart.
-Dosyayı Ctrl+A ile sil, şunu yapıştır:
-typescript'use client'
+'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
