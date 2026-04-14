@@ -245,8 +245,16 @@ export default function BookingPage() {
                     )}
                   </div>
                   <div style={{ padding: '12px 16px', background: isSelected ? '#FAF7F2' : 'white' }}>
-                    <p style={{ margin: 0, fontSize: 11, color: '#8A6A48' }}>{service.description}</p>
-                  </div>
+  <p style={{ margin: '0 0 10px', fontSize: 11, color: '#8A6A48' }}>{service.description}</p>
+  <div style={{
+    background: isSelected ? 'linear-gradient(135deg, #7A5A28, #1A1208)' : '#F5F0E8',
+    borderRadius: 10, padding: '10px 14px', textAlign: 'center'
+  }}>
+    <span style={{ fontSize: 11, color: isSelected ? '#D4A840' : '#7A5A28', letterSpacing: 1, fontWeight: 700 }}>
+      {isSelected ? '✓ SEÇİLDİ — TARİH SEÇİN ↓' : '👆 RANDEVU AL'}
+    </span>
+  </div>
+</div>
                 </div>
               )
             })}
