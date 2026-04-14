@@ -7,12 +7,32 @@ import { Service, BookingFormData } from '@/types'
 import { generateTimeSlots, filterAvailableSlots } from '@/lib/booking-logic'
 import { sendWhatsAppNotification } from '@/utils/whatsapp'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const DAYS_TR = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi']
-const SERVICE_ICONS: Record<string, string> = {
-  'Kalıcı Makyaj': '💄',
-  'Kaş Laminasyon': '✨',
-  'Kirpik Lifting': '👁️',
+
+const SERVICE_DATA: Record<string, { icon: string; image: string; color: string }> = {
+  'Kalıcı Makyaj': {
+    icon: '💄',
+    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80',
+    color: '#C9796A',
+  },
+  'Kaş Laminasyon': {
+    icon: '✨',
+    image: 'https://images.unsplash.com/photo-1560574188-6a6774965120?w=400&q=80',
+    color: '#8A7A5A',
+  },
+  'Kirpik Lifting': {
+    icon: '👁️',
+    image: 'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?w=400&q=80',
+    color: '#6A8A7A',
+  },
+}
+
+const DEFAULT_SERVICE = {
+  icon: '✦',
+  image: 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&q=80',
+  color: '#7A5A28',
 }
 
 export default function BookingPage() {
@@ -95,56 +115,61 @@ export default function BookingPage() {
 
   return (
     <main style={{ background: '#E8E0D4', fontFamily: "'Palatino', serif", minHeight: '100vh', paddingBottom: 60 }}>
-      
+
       {/* HEADER */}
       <header style={{ background: '#F8F3EC', borderBottom: '1px solid #D4B89630', padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, position: 'sticky', top: 0, zIndex: 50 }}>
-        <Link href="/" style={{ color: '#7A5A28', fontSize: 20, textDecoration: 'none', lineHeight: 1 }}>←</Link>
+        <Link href="/" style={{ color: '#7A5A28', fontSize: 20, textDecoration: 'none' }}>←</Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 36, height: 36, borderRadius: 8, background: 'linear-gradient(145deg, #1A1208, #2C1E0A)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 38, height: 38, borderRadius: 10, background: 'linear-gradient(145deg, #1A1208, #2C1E0A)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <span style={{ color: '#D4A840', fontSize: 13, fontWeight: 'bold' }}>BB</span>
           </div>
           <div>
             <p style={{ margin: 0, fontWeight: 700, fontSize: 11, letterSpacing: 2, color: '#1A1208' }}>RANDEVU AL</p>
-            <p style={{ margin: 0, fontSize: 9, color: '#7A5A28', letterSpacing: 1 }}>Burcu Bozkır Beauty Studio</p>
+            <p style={{ margin: 0, fontSize: 9, color: '#7A5A28' }}>Burcu Bozkır Beauty Studio</p>
           </div>
         </div>
       </header>
 
-      <div style={{ maxWidth: 500, margin: '0 auto', padding: '28px 16px' }}>
-
-        {/* ADIM GÖSTERGESİ */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 28 }}>
+      {/* ADIM GÖSTERGESİ */}
+      <div style={{ background: '#F8F3EC', padding: '14px 20px', borderBottom: '1px solid #D4B89620' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0 }}>
           {['Hizmet', 'Tarih', 'Saat', 'Bilgi'].map((step, i) => {
-            const stepNum = i + 1
-            const isActive = stepNum === 1 || (stepNum === 2 && selectedService) || (stepNum === 3 && selectedDate) || (stepNum === 4 && form.appointment_time)
-            const isDone = (stepNum === 1 && selectedService) || (stepNum === 2 && selectedDate) || (stepNum === 3 && form.appointment_time)
+            const done = (i === 0 && selectedService) || (i === 1 && selectedDate) || (i === 2 && form.appointment_time)
+            const active = i === 0 || (i === 1 && selectedService) || (i === 2 && selectedDate) || (i === 3 && form.appointment_time)
             return (
-              <div key={step} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div key={step} style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
                   <div style={{
                     width: 28, height: 28, borderRadius: '50%',
-                    background: isDone ? '#7A5A28' : isActive ? '#1A1208' : '#D4B89640',
+                    background: done ? '#7A5A28' : active ? '#1A1208' : '#D4B89640',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 11, fontWeight: 'bold',
-                    color: isDone || isActive ? '#D4A840' : '#8A6A48',
+                    fontSize: 10, fontWeight: 'bold',
+                    color: done || active ? '#D4A840' : '#8A6A48',
                   }}>
-                    {isDone ? '✓' : stepNum}
+                    {done ? '✓' : i + 1}
                   </div>
-                  <span style={{ fontSize: 8, color: isActive ? '#1A1208' : '#8A6A48', letterSpacing: 1 }}>{step.toUpperCase()}</span>
+                  <span style={{ fontSize: 8, color: active ? '#1A1208' : '#AA8A68', letterSpacing: 1 }}>{step.toUpperCase()}</span>
                 </div>
-                {i < 3 && <div style={{ width: 24, height: 1, background: '#D4B89640', marginBottom: 16 }} />}
+                {i < 3 && <div style={{ width: 36, height: 1, background: done ? '#7A5A28' : '#D4B89640', margin: '0 4px', marginBottom: 16 }} />}
               </div>
             )
           })}
         </div>
+      </div>
+
+      <div style={{ maxWidth: 500, margin: '0 auto', padding: '24px 16px' }}>
 
         {/* 1. HİZMET */}
         <div style={{ marginBottom: 24 }}>
-          <p style={{ fontSize: 9, letterSpacing: 3, color: '#7A5A28', marginBottom: 14, textAlign: 'center' }}>HİZMET SEÇİN</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {services.map((service, i) => {
+          <div style={{ textAlign: 'center', marginBottom: 18 }}>
+            <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 1</p>
+            <h2 style={{ fontSize: 20, fontWeight: 400, color: '#1A1208', margin: 0 }}>Hizmet Seçin</h2>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {services.map((service) => {
               const isSelected = form.service_id === service.id
-              const icon = SERVICE_ICONS[service.name] || '✦'
+              const data = SERVICE_DATA[service.name] || DEFAULT_SERVICE
               return (
                 <div
                   key={service.id}
@@ -152,45 +177,49 @@ export default function BookingPage() {
                   style={{
                     cursor: 'pointer',
                     borderRadius: 20,
-                    border: isSelected ? '2px solid #7A5A28' : '2px solid transparent',
-                    background: isSelected ? '#F8F3EC' : 'white',
-                    boxShadow: isSelected ? '0 4px 20px rgba(122,90,40,0.15)' : '0 2px 12px rgba(0,0,0,0.06)',
                     overflow: 'hidden',
-                    transition: 'all 0.2s',
+                    border: isSelected ? '2px solid #7A5A28' : '2px solid transparent',
+                    boxShadow: isSelected ? '0 8px 28px rgba(122,90,40,0.2)' : '0 2px 16px rgba(0,0,0,0.07)',
+                    background: 'white',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'stretch' }}>
-                    {/* Sol renk şeridi */}
-                    <div style={{
-                      width: 6,
-                      background: isSelected ? '#7A5A28' : '#D4B89640',
-                      flexShrink: 0,
-                    }} />
-                    <div style={{ padding: '18px 16px', flex: 1 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div style={{
-                            width: 44, height: 44, borderRadius: 12,
-                            background: isSelected ? 'linear-gradient(145deg, #1A1208, #2C1E0A)' : '#F5F0E8',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            fontSize: 20, flexShrink: 0,
-                          }}>
-                            {icon}
-                          </div>
-                          <div>
-                            <p style={{ margin: '0 0 3px', fontWeight: 700, fontSize: 15, color: '#1A1208' }}>{service.name}</p>
-                            <p style={{ margin: 0, fontSize: 10, color: '#8A6A48' }}>{service.description}</p>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6 }}>
-                              <span style={{ fontSize: 9, color: '#AA8A68', background: '#F5F0E8', padding: '2px 8px', borderRadius: 10 }}>⏱ {service.duration_minutes} dk</span>
-                            </div>
-                          </div>
+                  {/* Fotoğraf bölümü */}
+                  <div style={{ position: 'relative', height: 140, overflow: 'hidden' }}>
+                    <img
+                      src={data.image}
+                      alt={service.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', filter: isSelected ? 'brightness(0.85)' : 'brightness(0.75)' }}
+                    />
+                    {/* Üst gradient */}
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(26,18,8,0.6) 100%)' }} />
+                    
+                    {/* Fotoğraf üstü bilgiler */}
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px 16px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                        <div>
+                          <p style={{ margin: 0, fontWeight: 700, fontSize: 17, color: 'white', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{service.name}</p>
+                          <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.7)', background: 'rgba(0,0,0,0.3)', padding: '2px 8px', borderRadius: 8 }}>⏱ {service.duration_minutes} dk</span>
                         </div>
-                        <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 8 }}>
-                          <p style={{ margin: 0, fontWeight: 700, fontSize: 18, color: '#7A5A28' }}>₺{service.price}</p>
-                          {isSelected && <p style={{ margin: '4px 0 0', fontSize: 9, color: '#7A5A28' }}>✓ Seçildi</p>}
-                        </div>
+                        <p style={{ margin: 0, fontWeight: 700, fontSize: 20, color: '#D4A840', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>₺{service.price}</p>
                       </div>
                     </div>
+
+                    {/* Seçildi işareti */}
+                    {isSelected && (
+                      <div style={{ position: 'absolute', top: 12, right: 12, width: 28, height: 28, borderRadius: '50%', background: '#7A5A28', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <span style={{ color: '#D4A840', fontSize: 14, fontWeight: 'bold' }}>✓</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Alt açıklama */}
+                  <div style={{ padding: '12px 16px', background: isSelected ? '#FAF7F2' : 'white' }}>
+                    <p style={{ margin: 0, fontSize: 11, color: '#8A6A48', lineHeight: 1.5 }}>{service.description}</p>
+                    {isSelected && (
+                      <div style={{ marginTop: 10, background: 'linear-gradient(135deg, #1A1208, #2C1E0A)', borderRadius: 10, padding: '10px 14px', textAlign: 'center' }}>
+                        <span style={{ fontSize: 10, color: '#D4A840', letterSpacing: 2, fontWeight: 700 }}>SEÇİLDİ · TARİH SEÇMEye DEVAM EDİN ↓</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )
@@ -201,8 +230,11 @@ export default function BookingPage() {
 
         {/* 2. TARİH */}
         {selectedService && (
-          <div style={{ marginBottom: 24, background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
-            <p style={{ fontSize: 9, letterSpacing: 3, color: '#7A5A28', marginBottom: 14, textAlign: 'center' }}>TARİH SEÇİN</p>
+          <div style={{ marginBottom: 24, background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' }}>
+            <div style={{ textAlign: 'center', marginBottom: 16 }}>
+              <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 2</p>
+              <h2 style={{ fontSize: 18, fontWeight: 400, color: '#1A1208', margin: 0 }}>Tarih Seçin</h2>
+            </div>
             <input
               type="date" min={todayStr} value={selectedDate}
               onChange={e => { setSelectedDate(e.target.value); setForm(f => ({ ...f, appointment_date: e.target.value })) }}
@@ -210,7 +242,7 @@ export default function BookingPage() {
             />
             {selectedDate && (
               <p style={{ fontSize: 12, color: '#7A5A28', marginTop: 8, textAlign: 'center', fontStyle: 'italic' }}>
-                {DAYS_TR[new Date(selectedDate).getDay()]} günü seçildi
+                📅 {DAYS_TR[new Date(selectedDate).getDay()]} günü seçildi
               </p>
             )}
             {errors.appointment_date && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 6 }}>{errors.appointment_date}</p>}
@@ -219,15 +251,17 @@ export default function BookingPage() {
 
         {/* 3. SAAT */}
         {selectedDate && (
-          <div style={{ marginBottom: 24, background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
-            <p style={{ fontSize: 9, letterSpacing: 3, color: '#7A5A28', marginBottom: 14, textAlign: 'center' }}>SAAT SEÇİN</p>
+          <div style={{ marginBottom: 24, background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' }}>
+            <div style={{ textAlign: 'center', marginBottom: 16 }}>
+              <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 3</p>
+              <h2 style={{ fontSize: 18, fontWeight: 400, color: '#1A1208', margin: 0 }}>Saat Seçin</h2>
+            </div>
             {loadingSlots ? (
               <p style={{ fontSize: 13, color: '#8A6A48', textAlign: 'center' }}>Müsait saatler yükleniyor...</p>
             ) : availableSlots.length === 0 ? (
               <div style={{ textAlign: 'center', padding: 16 }}>
                 <p style={{ fontSize: 24, marginBottom: 8 }}>😔</p>
                 <p style={{ fontSize: 13, color: '#8A6A48' }}>Bu tarihte müsait saat yok.</p>
-                <p style={{ fontSize: 11, color: '#AA8A68' }}>Lütfen başka bir gün seçin.</p>
               </div>
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
@@ -236,16 +270,11 @@ export default function BookingPage() {
                     key={slot}
                     onClick={() => setForm(f => ({ ...f, appointment_time: slot }))}
                     style={{
-                      cursor: 'pointer',
-                      padding: '12px 4px',
-                      borderRadius: 12,
-                      textAlign: 'center',
-                      fontSize: 13,
-                      fontWeight: 600,
+                      cursor: 'pointer', padding: '12px 4px', borderRadius: 12,
+                      textAlign: 'center', fontSize: 13, fontWeight: 600,
                       background: form.appointment_time === slot ? '#1A1208' : '#FAF8F5',
                       color: form.appointment_time === slot ? '#D4A840' : '#1A1208',
-                      border: '2px solid',
-                      borderColor: form.appointment_time === slot ? '#1A1208' : '#D4B89630',
+                      border: '2px solid', borderColor: form.appointment_time === slot ? '#1A1208' : '#D4B89630',
                       boxShadow: form.appointment_time === slot ? '0 4px 12px rgba(26,18,8,0.2)' : 'none',
                     }}
                   >
@@ -260,13 +289,15 @@ export default function BookingPage() {
 
         {/* 4. BİLGİLER */}
         {form.appointment_time && (
-          <div style={{ marginBottom: 24, background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
-            <p style={{ fontSize: 9, letterSpacing: 3, color: '#7A5A28', marginBottom: 14, textAlign: 'center' }}>BİLGİLERİNİZ</p>
+          <div style={{ marginBottom: 24, background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' }}>
+            <div style={{ textAlign: 'center', marginBottom: 16 }}>
+              <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 4</p>
+              <h2 style={{ fontSize: 18, fontWeight: 400, color: '#1A1208', margin: 0 }}>Bilgileriniz</h2>
+            </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <div>
                 <label style={{ fontSize: 10, color: '#8A6A48', letterSpacing: 1, display: 'block', marginBottom: 6 }}>AD SOYAD</label>
-                <input
-                  type="text" placeholder="Adınız ve soyadınız" value={form.customer_name}
+                <input type="text" placeholder="Adınız ve soyadınız" value={form.customer_name}
                   onChange={e => setForm(f => ({ ...f, customer_name: e.target.value }))}
                   style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, boxSizing: 'border-box' }}
                 />
@@ -274,8 +305,7 @@ export default function BookingPage() {
               </div>
               <div>
                 <label style={{ fontSize: 10, color: '#8A6A48', letterSpacing: 1, display: 'block', marginBottom: 6 }}>TELEFON</label>
-                <input
-                  type="tel" placeholder="05XX XXX XX XX" value={form.customer_phone}
+                <input type="tel" placeholder="05XX XXX XX XX" value={form.customer_phone}
                   onChange={e => setForm(f => ({ ...f, customer_phone: e.target.value }))}
                   style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, boxSizing: 'border-box' }}
                 />
@@ -283,8 +313,7 @@ export default function BookingPage() {
               </div>
               <div>
                 <label style={{ fontSize: 10, color: '#8A6A48', letterSpacing: 1, display: 'block', marginBottom: 6 }}>NOT (İSTEĞE BAĞLI)</label>
-                <textarea
-                  placeholder="Özel bir isteğiniz var mı?" value={form.customer_note} rows={3}
+                <textarea placeholder="Özel bir isteğiniz var mı?" value={form.customer_note} rows={3}
                   onChange={e => setForm(f => ({ ...f, customer_note: e.target.value }))}
                   style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, resize: 'none', boxSizing: 'border-box' }}
                 />
@@ -306,7 +335,7 @@ export default function BookingPage() {
               ].map(([k, v]) => (
                 <div key={k} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, paddingBottom: 10, borderBottom: '1px solid #ffffff10' }}>
                   <span style={{ fontSize: 12, color: '#6A5A40' }}>{k}</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: k?.includes('Ücret') ? '#D4A840' : '#F0E0B0' }}>{v}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: String(k).includes('Ücret') ? '#D4A840' : '#F0E0B0' }}>{v}</span>
                 </div>
               ))}
             </div>
@@ -324,6 +353,9 @@ export default function BookingPage() {
             >
               {submitting ? 'GÖNDERİLİYOR...' : 'RANDEVUYU ONAYLA →'}
             </button>
+            <p style={{ textAlign: 'center', fontSize: 10, color: '#8A6A48', marginTop: 12 }}>
+              Randevu sonrası WhatsApp ile onay gelecektir
+            </p>
           </div>
         )}
       </div>
