@@ -36,62 +36,45 @@ function Calendar({ onSelect, selected }: { onSelect: (date: string) => void; se
     else setViewMonth(m => m + 1)
   }
 
-  const cells = []
+  const cells: (number | null)[] = []
   for (let i = 0; i < firstDay; i++) cells.push(null)
   for (let d = 1; d <= daysInMonth; d++) cells.push(d)
 
   return (
-    <div style={{ background: 'white', borderRadius: 16, padding: 16, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' }}>
-      {/* Ay/Yıl navigasyon */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-        <button onClick={prevMonth} style={{ background: '#F5F0E8', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 16, color: '#7A5A28' }}>‹</button>
-        <p style={{ margin: 0, fontWeight: 700, fontSize: 14, color: '#1A1208', letterSpacing: 1 }}>
-          {MONTHS_TR[viewMonth]} {viewYear}
-        </p>
-        <button onClick={nextMonth} style={{ background: '#F5F0E8', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 16, color: '#7A5A28' }}>›</button>
+    <div style={{ background: '#FAF7F2', borderRadius: 14, padding: 14 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+        <button onClick={prevMonth} style={{ background: '#F0EBE0', border: 'none', borderRadius: 8, width: 30, height: 30, cursor: 'pointer', fontSize: 16, color: '#7A5A28' }}>‹</button>
+        <p style={{ margin: 0, fontWeight: 700, fontSize: 13, color: '#1A1208' }}>{MONTHS_TR[viewMonth]} {viewYear}</p>
+        <button onClick={nextMonth} style={{ background: '#F0EBE0', border: 'none', borderRadius: 8, width: 30, height: 30, cursor: 'pointer', fontSize: 16, color: '#7A5A28' }}>›</button>
       </div>
-
-      {/* Gün başlıkları */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginBottom: 6 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 3, marginBottom: 4 }}>
         {DAYS_TR.map(d => (
-          <div key={d} style={{ textAlign: 'center', fontSize: 9, color: '#AA8A68', fontWeight: 700, letterSpacing: 1, padding: '4px 0' }}>{d}</div>
+          <div key={d} style={{ textAlign: 'center', fontSize: 9, color: '#AA8A68', fontWeight: 700, padding: '3px 0' }}>{d}</div>
         ))}
       </div>
-
-      {/* Günler */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 3 }}>
         {cells.map((day, i) => {
-          if (!day) return <div key={`empty-${i}`} />
+          if (!day) return <div key={`e-${i}`} />
           const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
           const isPast = dateStr < todayStr
           const isSelected = dateStr === selected
           const isToday = dateStr === todayStr
           return (
-            <button
-              key={dateStr}
-              onClick={() => !isPast && onSelect(dateStr)}
-              disabled={isPast}
+            <button key={dateStr} onClick={() => !isPast && onSelect(dateStr)} disabled={isPast}
               style={{
-                border: 'none',
-                borderRadius: 10,
-                padding: '10px 4px',
-                cursor: isPast ? 'not-allowed' : 'pointer',
-                textAlign: 'center',
-                fontSize: 13,
-                fontWeight: isSelected || isToday ? 700 : 400,
-                background: isSelected ? '#1A1208' : isToday ? '#F5F0E8' : 'transparent',
+                border: 'none', borderRadius: 8, padding: '9px 2px', cursor: isPast ? 'not-allowed' : 'pointer',
+                textAlign: 'center', fontSize: 12, fontWeight: isSelected ? 700 : 400,
+                background: isSelected ? '#1A1208' : isToday ? '#F0EBE0' : 'transparent',
                 color: isSelected ? '#D4A840' : isPast ? '#D4B89660' : isToday ? '#7A5A28' : '#1A1208',
-                outline: isToday && !isSelected ? '2px solid #D4B89680' : 'none',
-              }}
-            >
+                outline: isToday && !isSelected ? '1px solid #D4B89680' : 'none',
+              }}>
               {day}
             </button>
           )
         })}
       </div>
-
       {selected && (
-        <p style={{ textAlign: 'center', fontSize: 11, color: '#7A5A28', marginTop: 12, fontStyle: 'italic' }}>
+        <p style={{ textAlign: 'center', fontSize: 11, color: '#7A5A28', marginTop: 10, fontStyle: 'italic' }}>
           📅 {selected.split('-').reverse().join('.')} seçildi
         </p>
       )}
@@ -215,8 +198,8 @@ export default function BookingPage() {
 
       <div style={{ maxWidth: 500, margin: '0 auto', padding: '24px 16px' }}>
 
-        {/* 1. HİZMET */}
-        <div style={{ marginBottom: 24 }}>
+        {/* HİZMET KARTLARI */}
+        <div style={{ marginBottom: 16 }}>
           <div style={{ textAlign: 'center', marginBottom: 18 }}>
             <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 1</p>
             <h2 style={{ fontSize: 20, fontWeight: 400, color: '#1A1208', margin: 0 }}>Hizmet Seçin</h2>
@@ -226,9 +209,11 @@ export default function BookingPage() {
               const isSelected = form.service_id === service.id
               const data = SERVICE_DATA[service.name] || DEFAULT_SERVICE
               return (
-                <div key={service.id} onClick={() => { setSelectedService(service); setForm(f => ({ ...f, service_id: service.id })) }}
-                  style={{ cursor: 'pointer', borderRadius: 20, overflow: 'hidden', border: isSelected ? '2px solid #7A5A28' : '2px solid transparent', boxShadow: isSelected ? '0 8px 28px rgba(122,90,40,0.2)' : '0 2px 16px rgba(0,0,0,0.07)', background: 'white' }}>
-                  <div style={{ position: 'relative', height: 130, overflow: 'hidden' }}>
+                <div key={service.id} style={{ borderRadius: 20, overflow: 'hidden', border: isSelected ? '2px solid #7A5A28' : '2px solid transparent', boxShadow: isSelected ? '0 8px 28px rgba(122,90,40,0.2)' : '0 2px 16px rgba(0,0,0,0.07)', background: 'white' }}>
+                  
+                  {/* Fotoğraf */}
+                  <div onClick={() => { setSelectedService(service); setForm(f => ({ ...f, service_id: service.id })) }}
+                    style={{ position: 'relative', height: 130, overflow: 'hidden', cursor: 'pointer' }}>
                     <img src={data.image} alt={service.name} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.7)' }} />
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 0%, rgba(26,18,8,0.7) 100%)' }} />
                     <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
@@ -244,17 +229,32 @@ export default function BookingPage() {
                       </div>
                     )}
                   </div>
+
+                  {/* Alt kısım */}
                   <div style={{ padding: '12px 16px', background: isSelected ? '#FAF7F2' : 'white' }}>
-  <p style={{ margin: '0 0 10px', fontSize: 11, color: '#8A6A48' }}>{service.description}</p>
-  <div style={{
-    background: isSelected ? 'linear-gradient(135deg, #7A5A28, #1A1208)' : '#F5F0E8',
-    borderRadius: 10, padding: '10px 14px', textAlign: 'center'
-  }}>
-    <span style={{ fontSize: 11, color: isSelected ? '#D4A840' : '#7A5A28', letterSpacing: 1, fontWeight: 700 }}>
-      {isSelected ? '✓ SEÇİLDİ — TARİH SEÇİN ↓' : '👆 RANDEVU AL'}
-    </span>
-  </div>
-</div>
+                    <p style={{ margin: '0 0 10px', fontSize: 11, color: '#8A6A48' }}>{service.description}</p>
+                    
+                    {/* Randevu Al butonu */}
+                    <div
+                      onClick={() => { setSelectedService(service); setForm(f => ({ ...f, service_id: service.id })) }}
+                      style={{ background: isSelected ? 'linear-gradient(135deg, #7A5A28, #1A1208)' : '#F5F0E8', borderRadius: 10, padding: '10px 14px', textAlign: 'center', cursor: 'pointer' }}>
+                      <span style={{ fontSize: 11, color: isSelected ? '#D4A840' : '#7A5A28', letterSpacing: 1, fontWeight: 700 }}>
+                        {isSelected ? '✓ SEÇİLDİ' : '📅 RANDEVU AL'}
+                      </span>
+                    </div>
+
+                    {/* TAKVİM — KART İÇİNDE */}
+                    {isSelected && (
+                      <div style={{ marginTop: 16, borderTop: '1px solid #D4B89630', paddingTop: 16 }}>
+                        <p style={{ fontSize: 9, letterSpacing: 3, color: '#7A5A28', margin: '0 0 12px', textAlign: 'center' }}>TARİH SEÇİN</p>
+                        <Calendar
+                          selected={selectedDate}
+                          onSelect={(date) => { setSelectedDate(date); setForm(f => ({ ...f, appointment_date: date })) }}
+                        />
+                        {errors.appointment_date && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 6, textAlign: 'center' }}>{errors.appointment_date}</p>}
+                      </div>
+                    )}
+                  </div>
                 </div>
               )
             })}
@@ -262,22 +262,7 @@ export default function BookingPage() {
           {errors.service_id && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 8, textAlign: 'center' }}>{errors.service_id}</p>}
         </div>
 
-        {/* 2. TARİH — TAKVİM */}
-        {selectedService && (
-          <div style={{ marginBottom: 24 }}>
-            <div style={{ textAlign: 'center', marginBottom: 16 }}>
-              <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 2</p>
-              <h2 style={{ fontSize: 18, fontWeight: 400, color: '#1A1208', margin: 0 }}>Tarih Seçin</h2>
-            </div>
-            <Calendar
-              selected={selectedDate}
-              onSelect={(date) => { setSelectedDate(date); setForm(f => ({ ...f, appointment_date: date })) }}
-            />
-            {errors.appointment_date && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 6, textAlign: 'center' }}>{errors.appointment_date}</p>}
-          </div>
-        )}
-
-        {/* 3. SAAT */}
+        {/* SAAT */}
         {selectedDate && (
           <div style={{ marginBottom: 24, background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' }}>
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
@@ -305,7 +290,7 @@ export default function BookingPage() {
           </div>
         )}
 
-        {/* 4. BİLGİLER */}
+        {/* BİLGİLER */}
         {form.appointment_time && (
           <div style={{ marginBottom: 24, background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' }}>
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
