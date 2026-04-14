@@ -1,4 +1,6 @@
-'use client'
+Anladım — tarih seçilince saat de aynı kartın içinde açılsın, aşağı kaymadan. Hizmet kartı içinde: fotoğraf → tarih takvimi → saat seçimi, hepsi tek kart.
+Dosyayı Ctrl+A ile sil, şunu yapıştır:
+typescript'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -11,31 +13,22 @@ import Link from 'next/link'
 const DAYS_TR = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt']
 const MONTHS_TR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık']
 
-const SERVICE_DATA: Record<string, { icon: string; image: string }> = {
-  'Kalıcı Makyaj': { icon: '💄', image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80' },
-  'Kaş Laminasyon': { icon: '✨', image: 'https://images.unsplash.com/photo-1560574188-6a6774965120?w=400&q=80' },
-  'Kirpik Lifting': { icon: '👁️', image: 'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?w=400&q=80' },
+const SERVICE_DATA: Record<string, { image: string }> = {
+  'Kalıcı Makyaj': { image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80' },
+  'Kaş Laminasyon': { image: 'https://images.unsplash.com/photo-1560574188-6a6774965120?w=400&q=80' },
+  'Kirpik Lifting': { image: 'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?w=400&q=80' },
 }
-const DEFAULT_SERVICE = { icon: '✦', image: 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&q=80' }
+const DEFAULT_SERVICE = { image: 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&q=80' }
 
 function Calendar({ onSelect, selected }: { onSelect: (date: string) => void; selected: string }) {
   const today = new Date()
   const [viewYear, setViewYear] = useState(today.getFullYear())
   const [viewMonth, setViewMonth] = useState(today.getMonth())
-
   const firstDay = new Date(viewYear, viewMonth, 1).getDay()
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate()
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
-
-  const prevMonth = () => {
-    if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1) }
-    else setViewMonth(m => m - 1)
-  }
-  const nextMonth = () => {
-    if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1) }
-    else setViewMonth(m => m + 1)
-  }
-
+  const prevMonth = () => { if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1) } else setViewMonth(m => m - 1) }
+  const nextMonth = () => { if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1) } else setViewMonth(m => m + 1) }
   const cells: (number | null)[] = []
   for (let i = 0; i < firstDay; i++) cells.push(null)
   for (let d = 1; d <= daysInMonth; d++) cells.push(d)
@@ -48,9 +41,7 @@ function Calendar({ onSelect, selected }: { onSelect: (date: string) => void; se
         <button onClick={nextMonth} style={{ background: '#F0EBE0', border: 'none', borderRadius: 8, width: 30, height: 30, cursor: 'pointer', fontSize: 16, color: '#7A5A28' }}>›</button>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 3, marginBottom: 4 }}>
-        {DAYS_TR.map(d => (
-          <div key={d} style={{ textAlign: 'center', fontSize: 9, color: '#AA8A68', fontWeight: 700, padding: '3px 0' }}>{d}</div>
-        ))}
+        {DAYS_TR.map(d => <div key={d} style={{ textAlign: 'center', fontSize: 9, color: '#AA8A68', fontWeight: 700, padding: '3px 0' }}>{d}</div>)}
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 3 }}>
         {cells.map((day, i) => {
@@ -61,23 +52,13 @@ function Calendar({ onSelect, selected }: { onSelect: (date: string) => void; se
           const isToday = dateStr === todayStr
           return (
             <button key={dateStr} onClick={() => !isPast && onSelect(dateStr)} disabled={isPast}
-              style={{
-                border: 'none', borderRadius: 8, padding: '9px 2px', cursor: isPast ? 'not-allowed' : 'pointer',
-                textAlign: 'center', fontSize: 12, fontWeight: isSelected ? 700 : 400,
-                background: isSelected ? '#1A1208' : isToday ? '#F0EBE0' : 'transparent',
-                color: isSelected ? '#D4A840' : isPast ? '#D4B89660' : isToday ? '#7A5A28' : '#1A1208',
-                outline: isToday && !isSelected ? '1px solid #D4B89680' : 'none',
-              }}>
+              style={{ border: 'none', borderRadius: 8, padding: '9px 2px', cursor: isPast ? 'not-allowed' : 'pointer', textAlign: 'center', fontSize: 12, fontWeight: isSelected ? 700 : 400, background: isSelected ? '#1A1208' : isToday ? '#F0EBE0' : 'transparent', color: isSelected ? '#D4A840' : isPast ? '#D4B89660' : isToday ? '#7A5A28' : '#1A1208', outline: isToday && !isSelected ? '1px solid #D4B89680' : 'none' }}>
               {day}
             </button>
           )
         })}
       </div>
-      {selected && (
-        <p style={{ textAlign: 'center', fontSize: 11, color: '#7A5A28', marginTop: 10, fontStyle: 'italic' }}>
-          📅 {selected.split('-').reverse().join('.')} seçildi
-        </p>
-      )}
+      {selected && <p style={{ textAlign: 'center', fontSize: 11, color: '#7A5A28', marginTop: 10, fontStyle: 'italic' }}>📅 {selected.split('-').reverse().join('.')} seçildi</p>}
     </div>
   )
 }
@@ -161,7 +142,6 @@ export default function BookingPage() {
   return (
     <main style={{ background: '#E8E0D4', fontFamily: "'Palatino', serif", minHeight: '100vh', paddingBottom: 60 }}>
 
-      {/* HEADER */}
       <header style={{ background: '#F8F3EC', borderBottom: '1px solid #D4B89630', padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, position: 'sticky', top: 0, zIndex: 50 }}>
         <Link href="/" style={{ color: '#7A5A28', fontSize: 20, textDecoration: 'none' }}>←</Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -175,21 +155,20 @@ export default function BookingPage() {
         </div>
       </header>
 
-      {/* ADIM GÖSTERGESİ */}
       <div style={{ background: '#F8F3EC', padding: '14px 20px', borderBottom: '1px solid #D4B89620' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {['Hizmet', 'Tarih', 'Saat', 'Bilgi'].map((step, i) => {
-            const done = (i === 0 && selectedService) || (i === 1 && selectedDate) || (i === 2 && form.appointment_time)
-            const active = i === 0 || (i === 1 && selectedService) || (i === 2 && selectedDate) || (i === 3 && form.appointment_time)
+          {['Hizmet', 'Tarih & Saat', 'Bilgi', 'Onay'].map((step, i) => {
+            const done = (i === 0 && selectedService) || (i === 1 && form.appointment_time) || (i === 2 && form.customer_phone)
+            const active = i === 0 || (i === 1 && selectedService) || (i === 2 && form.appointment_time) || (i === 3 && form.customer_phone)
             return (
               <div key={step} style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
                   <div style={{ width: 28, height: 28, borderRadius: '50%', background: done ? '#7A5A28' : active ? '#1A1208' : '#D4B89640', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 'bold', color: done || active ? '#D4A840' : '#8A6A48' }}>
                     {done ? '✓' : i + 1}
                   </div>
-                  <span style={{ fontSize: 8, color: active ? '#1A1208' : '#AA8A68', letterSpacing: 1 }}>{step.toUpperCase()}</span>
+                  <span style={{ fontSize: 7, color: active ? '#1A1208' : '#AA8A68', letterSpacing: 0.5 }}>{step.toUpperCase()}</span>
                 </div>
-                {i < 3 && <div style={{ width: 36, height: 1, background: done ? '#7A5A28' : '#D4B89640', margin: '0 4px', marginBottom: 16 }} />}
+                {i < 3 && <div style={{ width: 28, height: 1, background: done ? '#7A5A28' : '#D4B89640', margin: '0 4px', marginBottom: 16 }} />}
               </div>
             )
           })}
@@ -204,15 +183,17 @@ export default function BookingPage() {
             <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 1</p>
             <h2 style={{ fontSize: 20, fontWeight: 400, color: '#1A1208', margin: 0 }}>Hizmet Seçin</h2>
           </div>
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {services.map((service) => {
               const isSelected = form.service_id === service.id
               const data = SERVICE_DATA[service.name] || DEFAULT_SERVICE
+
               return (
                 <div key={service.id} style={{ borderRadius: 20, overflow: 'hidden', border: isSelected ? '2px solid #7A5A28' : '2px solid transparent', boxShadow: isSelected ? '0 8px 28px rgba(122,90,40,0.2)' : '0 2px 16px rgba(0,0,0,0.07)', background: 'white' }}>
-                  
+
                   {/* Fotoğraf */}
-                  <div onClick={() => { setSelectedService(service); setForm(f => ({ ...f, service_id: service.id })) }}
+                  <div onClick={() => { setSelectedService(service); setForm(f => ({ ...f, service_id: service.id, appointment_date: '', appointment_time: '' })); setSelectedDate(''); setAvailableSlots([]) }}
                     style={{ position: 'relative', height: 130, overflow: 'hidden', cursor: 'pointer' }}>
                     <img src={data.image} alt={service.name} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.7)' }} />
                     <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 0%, rgba(26,18,8,0.7) 100%)' }} />
@@ -233,25 +214,46 @@ export default function BookingPage() {
                   {/* Alt kısım */}
                   <div style={{ padding: '12px 16px', background: isSelected ? '#FAF7F2' : 'white' }}>
                     <p style={{ margin: '0 0 10px', fontSize: 11, color: '#8A6A48' }}>{service.description}</p>
-                    
-                    {/* Randevu Al butonu */}
-                    <div
-                      onClick={() => { setSelectedService(service); setForm(f => ({ ...f, service_id: service.id })) }}
+
+                    <div onClick={() => { setSelectedService(service); setForm(f => ({ ...f, service_id: service.id })) }}
                       style={{ background: isSelected ? 'linear-gradient(135deg, #7A5A28, #1A1208)' : '#F5F0E8', borderRadius: 10, padding: '10px 14px', textAlign: 'center', cursor: 'pointer' }}>
                       <span style={{ fontSize: 11, color: isSelected ? '#D4A840' : '#7A5A28', letterSpacing: 1, fontWeight: 700 }}>
                         {isSelected ? '✓ SEÇİLDİ' : '📅 RANDEVU AL'}
                       </span>
                     </div>
 
-                    {/* TAKVİM — KART İÇİNDE */}
+                    {/* TAKVİM + SAAT — KART İÇİNDE */}
                     {isSelected && (
                       <div style={{ marginTop: 16, borderTop: '1px solid #D4B89630', paddingTop: 16 }}>
-                        <p style={{ fontSize: 9, letterSpacing: 3, color: '#7A5A28', margin: '0 0 12px', textAlign: 'center' }}>TARİH SEÇİN</p>
+                        
+                        {/* Takvim */}
+                        <p style={{ fontSize: 9, letterSpacing: 3, color: '#7A5A28', margin: '0 0 10px', textAlign: 'center' }}>📅 TARİH SEÇİN</p>
                         <Calendar
                           selected={selectedDate}
-                          onSelect={(date) => { setSelectedDate(date); setForm(f => ({ ...f, appointment_date: date })) }}
+                          onSelect={(date) => { setSelectedDate(date); setForm(f => ({ ...f, appointment_date: date, appointment_time: '' })) }}
                         />
-                        {errors.appointment_date && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 6, textAlign: 'center' }}>{errors.appointment_date}</p>}
+
+                        {/* Saatler */}
+                        {selectedDate && (
+                          <div style={{ marginTop: 16 }}>
+                            <p style={{ fontSize: 9, letterSpacing: 3, color: '#7A5A28', margin: '0 0 10px', textAlign: 'center' }}>🕐 SAAT SEÇİN</p>
+                            {loadingSlots ? (
+                              <p style={{ fontSize: 12, color: '#8A6A48', textAlign: 'center' }}>Yükleniyor...</p>
+                            ) : availableSlots.length === 0 ? (
+                              <p style={{ fontSize: 12, color: '#8A6A48', textAlign: 'center', background: '#F5F0E8', padding: 12, borderRadius: 10 }}>😔 Bu tarihte müsait saat yok.</p>
+                            ) : (
+                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+                                {availableSlots.map(slot => (
+                                  <div key={slot} onClick={() => setForm(f => ({ ...f, appointment_time: slot }))}
+                                    style={{ cursor: 'pointer', padding: '10px 4px', borderRadius: 10, textAlign: 'center', fontSize: 13, fontWeight: 600, background: form.appointment_time === slot ? '#1A1208' : '#F5F0E8', color: form.appointment_time === slot ? '#D4A840' : '#1A1208', border: '2px solid', borderColor: form.appointment_time === slot ? '#1A1208' : 'transparent' }}>
+                                    {slot}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                            {errors.appointment_time && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 6, textAlign: 'center' }}>{errors.appointment_time}</p>}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -262,39 +264,11 @@ export default function BookingPage() {
           {errors.service_id && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 8, textAlign: 'center' }}>{errors.service_id}</p>}
         </div>
 
-        {/* SAAT */}
-        {selectedDate && (
-          <div style={{ marginBottom: 24, background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' }}>
-            <div style={{ textAlign: 'center', marginBottom: 16 }}>
-              <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 3</p>
-              <h2 style={{ fontSize: 18, fontWeight: 400, color: '#1A1208', margin: 0 }}>Saat Seçin</h2>
-            </div>
-            {loadingSlots ? (
-              <p style={{ fontSize: 13, color: '#8A6A48', textAlign: 'center' }}>Müsait saatler yükleniyor...</p>
-            ) : availableSlots.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: 16 }}>
-                <p style={{ fontSize: 24, marginBottom: 8 }}>😔</p>
-                <p style={{ fontSize: 13, color: '#8A6A48' }}>Bu tarihte müsait saat yok.</p>
-              </div>
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
-                {availableSlots.map(slot => (
-                  <div key={slot} onClick={() => setForm(f => ({ ...f, appointment_time: slot }))}
-                    style={{ cursor: 'pointer', padding: '12px 4px', borderRadius: 12, textAlign: 'center', fontSize: 13, fontWeight: 600, background: form.appointment_time === slot ? '#1A1208' : '#FAF8F5', color: form.appointment_time === slot ? '#D4A840' : '#1A1208', border: '2px solid', borderColor: form.appointment_time === slot ? '#1A1208' : '#D4B89630' }}>
-                    {slot}
-                  </div>
-                ))}
-              </div>
-            )}
-            {errors.appointment_time && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 8 }}>{errors.appointment_time}</p>}
-          </div>
-        )}
-
         {/* BİLGİLER */}
         {form.appointment_time && (
           <div style={{ marginBottom: 24, background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' }}>
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
-              <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 4</p>
+              <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 2</p>
               <h2 style={{ fontSize: 18, fontWeight: 400, color: '#1A1208', margin: 0 }}>Bilgileriniz</h2>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
