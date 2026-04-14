@@ -7,32 +7,96 @@ import { Service, BookingFormData } from '@/types'
 import { generateTimeSlots, filterAvailableSlots } from '@/lib/booking-logic'
 import { sendWhatsAppNotification } from '@/utils/whatsapp'
 import Link from 'next/link'
-import Image from 'next/image'
 
-const DAYS_TR = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi']
+const DAYS_TR = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt']
+const MONTHS_TR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık']
 
-const SERVICE_DATA: Record<string, { icon: string; image: string; color: string }> = {
-  'Kalıcı Makyaj': {
-    icon: '💄',
-    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80',
-    color: '#C9796A',
-  },
-  'Kaş Laminasyon': {
-    icon: '✨',
-    image: 'https://images.unsplash.com/photo-1560574188-6a6774965120?w=400&q=80',
-    color: '#8A7A5A',
-  },
-  'Kirpik Lifting': {
-    icon: '👁️',
-    image: 'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?w=400&q=80',
-    color: '#6A8A7A',
-  },
+const SERVICE_DATA: Record<string, { icon: string; image: string }> = {
+  'Kalıcı Makyaj': { icon: '💄', image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=400&q=80' },
+  'Kaş Laminasyon': { icon: '✨', image: 'https://images.unsplash.com/photo-1560574188-6a6774965120?w=400&q=80' },
+  'Kirpik Lifting': { icon: '👁️', image: 'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?w=400&q=80' },
 }
+const DEFAULT_SERVICE = { icon: '✦', image: 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&q=80' }
 
-const DEFAULT_SERVICE = {
-  icon: '✦',
-  image: 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&q=80',
-  color: '#7A5A28',
+function Calendar({ onSelect, selected }: { onSelect: (date: string) => void; selected: string }) {
+  const today = new Date()
+  const [viewYear, setViewYear] = useState(today.getFullYear())
+  const [viewMonth, setViewMonth] = useState(today.getMonth())
+
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay()
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate()
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+
+  const prevMonth = () => {
+    if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1) }
+    else setViewMonth(m => m - 1)
+  }
+  const nextMonth = () => {
+    if (viewMonth === 11) { setViewMonth(0); setViewYear(y => y + 1) }
+    else setViewMonth(m => m + 1)
+  }
+
+  const cells = []
+  for (let i = 0; i < firstDay; i++) cells.push(null)
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d)
+
+  return (
+    <div style={{ background: 'white', borderRadius: 16, padding: 16, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' }}>
+      {/* Ay/Yıl navigasyon */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+        <button onClick={prevMonth} style={{ background: '#F5F0E8', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 16, color: '#7A5A28' }}>‹</button>
+        <p style={{ margin: 0, fontWeight: 700, fontSize: 14, color: '#1A1208', letterSpacing: 1 }}>
+          {MONTHS_TR[viewMonth]} {viewYear}
+        </p>
+        <button onClick={nextMonth} style={{ background: '#F5F0E8', border: 'none', borderRadius: 8, width: 32, height: 32, cursor: 'pointer', fontSize: 16, color: '#7A5A28' }}>›</button>
+      </div>
+
+      {/* Gün başlıkları */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginBottom: 6 }}>
+        {DAYS_TR.map(d => (
+          <div key={d} style={{ textAlign: 'center', fontSize: 9, color: '#AA8A68', fontWeight: 700, letterSpacing: 1, padding: '4px 0' }}>{d}</div>
+        ))}
+      </div>
+
+      {/* Günler */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4 }}>
+        {cells.map((day, i) => {
+          if (!day) return <div key={`empty-${i}`} />
+          const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+          const isPast = dateStr < todayStr
+          const isSelected = dateStr === selected
+          const isToday = dateStr === todayStr
+          return (
+            <button
+              key={dateStr}
+              onClick={() => !isPast && onSelect(dateStr)}
+              disabled={isPast}
+              style={{
+                border: 'none',
+                borderRadius: 10,
+                padding: '10px 4px',
+                cursor: isPast ? 'not-allowed' : 'pointer',
+                textAlign: 'center',
+                fontSize: 13,
+                fontWeight: isSelected || isToday ? 700 : 400,
+                background: isSelected ? '#1A1208' : isToday ? '#F5F0E8' : 'transparent',
+                color: isSelected ? '#D4A840' : isPast ? '#D4B89660' : isToday ? '#7A5A28' : '#1A1208',
+                outline: isToday && !isSelected ? '2px solid #D4B89680' : 'none',
+              }}
+            >
+              {day}
+            </button>
+          )
+        })}
+      </div>
+
+      {selected && (
+        <p style={{ textAlign: 'center', fontSize: 11, color: '#7A5A28', marginTop: 12, fontStyle: 'italic' }}>
+          📅 {selected.split('-').reverse().join('.')} seçildi
+        </p>
+      )}
+    </div>
+  )
 }
 
 export default function BookingPage() {
@@ -111,8 +175,6 @@ export default function BookingPage() {
     router.push(`/success?name=${encodeURIComponent(form.customer_name)}&service=${encodeURIComponent(selectedService!.name)}&date=${form.appointment_date}&time=${form.appointment_time}`)
   }
 
-  const todayStr = new Date().toISOString().split('T')[0]
-
   return (
     <main style={{ background: '#E8E0D4', fontFamily: "'Palatino', serif", minHeight: '100vh', paddingBottom: 60 }}>
 
@@ -132,20 +194,14 @@ export default function BookingPage() {
 
       {/* ADIM GÖSTERGESİ */}
       <div style={{ background: '#F8F3EC', padding: '14px 20px', borderBottom: '1px solid #D4B89620' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {['Hizmet', 'Tarih', 'Saat', 'Bilgi'].map((step, i) => {
             const done = (i === 0 && selectedService) || (i === 1 && selectedDate) || (i === 2 && form.appointment_time)
             const active = i === 0 || (i === 1 && selectedService) || (i === 2 && selectedDate) || (i === 3 && form.appointment_time)
             return (
               <div key={step} style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                  <div style={{
-                    width: 28, height: 28, borderRadius: '50%',
-                    background: done ? '#7A5A28' : active ? '#1A1208' : '#D4B89640',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 10, fontWeight: 'bold',
-                    color: done || active ? '#D4A840' : '#8A6A48',
-                  }}>
+                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: done ? '#7A5A28' : active ? '#1A1208' : '#D4B89640', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 'bold', color: done || active ? '#D4A840' : '#8A6A48' }}>
                     {done ? '✓' : i + 1}
                   </div>
                   <span style={{ fontSize: 8, color: active ? '#1A1208' : '#AA8A68', letterSpacing: 1 }}>{step.toUpperCase()}</span>
@@ -165,61 +221,31 @@ export default function BookingPage() {
             <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 1</p>
             <h2 style={{ fontSize: 20, fontWeight: 400, color: '#1A1208', margin: 0 }}>Hizmet Seçin</h2>
           </div>
-
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {services.map((service) => {
               const isSelected = form.service_id === service.id
               const data = SERVICE_DATA[service.name] || DEFAULT_SERVICE
               return (
-                <div
-                  key={service.id}
-                  onClick={() => { setSelectedService(service); setForm(f => ({ ...f, service_id: service.id })) }}
-                  style={{
-                    cursor: 'pointer',
-                    borderRadius: 20,
-                    overflow: 'hidden',
-                    border: isSelected ? '2px solid #7A5A28' : '2px solid transparent',
-                    boxShadow: isSelected ? '0 8px 28px rgba(122,90,40,0.2)' : '0 2px 16px rgba(0,0,0,0.07)',
-                    background: 'white',
-                  }}
-                >
-                  {/* Fotoğraf bölümü */}
-                  <div style={{ position: 'relative', height: 140, overflow: 'hidden' }}>
-                    <img
-                      src={data.image}
-                      alt={service.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover', filter: isSelected ? 'brightness(0.85)' : 'brightness(0.75)' }}
-                    />
-                    {/* Üst gradient */}
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(26,18,8,0.6) 100%)' }} />
-                    
-                    {/* Fotoğraf üstü bilgiler */}
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px 16px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                        <div>
-                          <p style={{ margin: 0, fontWeight: 700, fontSize: 17, color: 'white', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>{service.name}</p>
-                          <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.7)', background: 'rgba(0,0,0,0.3)', padding: '2px 8px', borderRadius: 8 }}>⏱ {service.duration_minutes} dk</span>
-                        </div>
-                        <p style={{ margin: 0, fontWeight: 700, fontSize: 20, color: '#D4A840', textShadow: '0 2px 8px rgba(0,0,0,0.5)' }}>₺{service.price}</p>
+                <div key={service.id} onClick={() => { setSelectedService(service); setForm(f => ({ ...f, service_id: service.id })) }}
+                  style={{ cursor: 'pointer', borderRadius: 20, overflow: 'hidden', border: isSelected ? '2px solid #7A5A28' : '2px solid transparent', boxShadow: isSelected ? '0 8px 28px rgba(122,90,40,0.2)' : '0 2px 16px rgba(0,0,0,0.07)', background: 'white' }}>
+                  <div style={{ position: 'relative', height: 130, overflow: 'hidden' }}>
+                    <img src={data.image} alt={service.name} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.7)' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 0%, rgba(26,18,8,0.7) 100%)' }} />
+                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                      <div>
+                        <p style={{ margin: 0, fontWeight: 700, fontSize: 16, color: 'white' }}>{service.name}</p>
+                        <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.7)', background: 'rgba(0,0,0,0.3)', padding: '2px 8px', borderRadius: 8 }}>⏱ {service.duration_minutes} dk</span>
                       </div>
+                      <p style={{ margin: 0, fontWeight: 700, fontSize: 19, color: '#D4A840' }}>₺{service.price}</p>
                     </div>
-
-                    {/* Seçildi işareti */}
                     {isSelected && (
-                      <div style={{ position: 'absolute', top: 12, right: 12, width: 28, height: 28, borderRadius: '50%', background: '#7A5A28', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span style={{ color: '#D4A840', fontSize: 14, fontWeight: 'bold' }}>✓</span>
+                      <div style={{ position: 'absolute', top: 10, right: 10, width: 26, height: 26, borderRadius: '50%', background: '#7A5A28', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <span style={{ color: '#D4A840', fontSize: 13, fontWeight: 'bold' }}>✓</span>
                       </div>
                     )}
                   </div>
-
-                  {/* Alt açıklama */}
                   <div style={{ padding: '12px 16px', background: isSelected ? '#FAF7F2' : 'white' }}>
-                    <p style={{ margin: 0, fontSize: 11, color: '#8A6A48', lineHeight: 1.5 }}>{service.description}</p>
-                    {isSelected && (
-                      <div style={{ marginTop: 10, background: 'linear-gradient(135deg, #1A1208, #2C1E0A)', borderRadius: 10, padding: '10px 14px', textAlign: 'center' }}>
-                        <span style={{ fontSize: 10, color: '#D4A840', letterSpacing: 2, fontWeight: 700 }}>SEÇİLDİ · TARİH SEÇMEye DEVAM EDİN ↓</span>
-                      </div>
-                    )}
+                    <p style={{ margin: 0, fontSize: 11, color: '#8A6A48' }}>{service.description}</p>
                   </div>
                 </div>
               )
@@ -228,24 +254,18 @@ export default function BookingPage() {
           {errors.service_id && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 8, textAlign: 'center' }}>{errors.service_id}</p>}
         </div>
 
-        {/* 2. TARİH */}
+        {/* 2. TARİH — TAKVİM */}
         {selectedService && (
-          <div style={{ marginBottom: 24, background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' }}>
+          <div style={{ marginBottom: 24 }}>
             <div style={{ textAlign: 'center', marginBottom: 16 }}>
               <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 2</p>
               <h2 style={{ fontSize: 18, fontWeight: 400, color: '#1A1208', margin: 0 }}>Tarih Seçin</h2>
             </div>
-            <input
-              type="date" min={todayStr} value={selectedDate}
-              onChange={e => { setSelectedDate(e.target.value); setForm(f => ({ ...f, appointment_date: e.target.value })) }}
-              style={{ width: '100%', padding: '14px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, boxSizing: 'border-box', color: '#1A1208' }}
+            <Calendar
+              selected={selectedDate}
+              onSelect={(date) => { setSelectedDate(date); setForm(f => ({ ...f, appointment_date: date })) }}
             />
-            {selectedDate && (
-              <p style={{ fontSize: 12, color: '#7A5A28', marginTop: 8, textAlign: 'center', fontStyle: 'italic' }}>
-                📅 {DAYS_TR[new Date(selectedDate).getDay()]} günü seçildi
-              </p>
-            )}
-            {errors.appointment_date && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 6 }}>{errors.appointment_date}</p>}
+            {errors.appointment_date && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 6, textAlign: 'center' }}>{errors.appointment_date}</p>}
           </div>
         )}
 
@@ -266,18 +286,8 @@ export default function BookingPage() {
             ) : (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
                 {availableSlots.map(slot => (
-                  <div
-                    key={slot}
-                    onClick={() => setForm(f => ({ ...f, appointment_time: slot }))}
-                    style={{
-                      cursor: 'pointer', padding: '12px 4px', borderRadius: 12,
-                      textAlign: 'center', fontSize: 13, fontWeight: 600,
-                      background: form.appointment_time === slot ? '#1A1208' : '#FAF8F5',
-                      color: form.appointment_time === slot ? '#D4A840' : '#1A1208',
-                      border: '2px solid', borderColor: form.appointment_time === slot ? '#1A1208' : '#D4B89630',
-                      boxShadow: form.appointment_time === slot ? '0 4px 12px rgba(26,18,8,0.2)' : 'none',
-                    }}
-                  >
+                  <div key={slot} onClick={() => setForm(f => ({ ...f, appointment_time: slot }))}
+                    style={{ cursor: 'pointer', padding: '12px 4px', borderRadius: 12, textAlign: 'center', fontSize: 13, fontWeight: 600, background: form.appointment_time === slot ? '#1A1208' : '#FAF8F5', color: form.appointment_time === slot ? '#D4A840' : '#1A1208', border: '2px solid', borderColor: form.appointment_time === slot ? '#1A1208' : '#D4B89630' }}>
                     {slot}
                   </div>
                 ))}
@@ -299,24 +309,21 @@ export default function BookingPage() {
                 <label style={{ fontSize: 10, color: '#8A6A48', letterSpacing: 1, display: 'block', marginBottom: 6 }}>AD SOYAD</label>
                 <input type="text" placeholder="Adınız ve soyadınız" value={form.customer_name}
                   onChange={e => setForm(f => ({ ...f, customer_name: e.target.value }))}
-                  style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, boxSizing: 'border-box' }}
-                />
+                  style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, boxSizing: 'border-box' }} />
                 {errors.customer_name && <p style={{ color: '#C0392B', fontSize: 11, margin: '4px 0 0' }}>{errors.customer_name}</p>}
               </div>
               <div>
                 <label style={{ fontSize: 10, color: '#8A6A48', letterSpacing: 1, display: 'block', marginBottom: 6 }}>TELEFON</label>
                 <input type="tel" placeholder="05XX XXX XX XX" value={form.customer_phone}
                   onChange={e => setForm(f => ({ ...f, customer_phone: e.target.value }))}
-                  style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, boxSizing: 'border-box' }}
-                />
+                  style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, boxSizing: 'border-box' }} />
                 {errors.customer_phone && <p style={{ color: '#C0392B', fontSize: 11, margin: '4px 0 0' }}>{errors.customer_phone}</p>}
               </div>
               <div>
                 <label style={{ fontSize: 10, color: '#8A6A48', letterSpacing: 1, display: 'block', marginBottom: 6 }}>NOT (İSTEĞE BAĞLI)</label>
                 <textarea placeholder="Özel bir isteğiniz var mı?" value={form.customer_note} rows={3}
                   onChange={e => setForm(f => ({ ...f, customer_note: e.target.value }))}
-                  style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, resize: 'none', boxSizing: 'border-box' }}
-                />
+                  style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, resize: 'none', boxSizing: 'border-box' }} />
               </div>
             </div>
           </div>
@@ -329,28 +336,19 @@ export default function BookingPage() {
               <p style={{ fontSize: 9, color: '#D4A840', letterSpacing: 3, marginBottom: 14, textAlign: 'center' }}>RANDEVU ÖZETİ</p>
               {[
                 ['💅 Hizmet', selectedService?.name],
-                ['📅 Tarih', form.appointment_date],
+                ['📅 Tarih', selectedDate ? selectedDate.split('-').reverse().join('.') : ''],
                 ['🕐 Saat', form.appointment_time],
                 ['💰 Ücret', `₺${selectedService?.price}`],
               ].map(([k, v]) => (
-                <div key={k} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, paddingBottom: 10, borderBottom: '1px solid #ffffff10' }}>
+                <div key={String(k)} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, paddingBottom: 10, borderBottom: '1px solid #ffffff10' }}>
                   <span style={{ fontSize: 12, color: '#6A5A40' }}>{k}</span>
                   <span style={{ fontSize: 12, fontWeight: 700, color: String(k).includes('Ücret') ? '#D4A840' : '#F0E0B0' }}>{v}</span>
                 </div>
               ))}
             </div>
             {errors.general && <p style={{ color: '#C0392B', fontSize: 12, marginBottom: 10, textAlign: 'center' }}>{errors.general}</p>}
-            <button
-              onClick={handleSubmit} disabled={submitting}
-              style={{
-                width: '100%', padding: '18px', borderRadius: 28,
-                background: 'linear-gradient(135deg, #7A5A28, #1A1208)',
-                color: '#D4A840', fontSize: 13, fontWeight: 700,
-                letterSpacing: 2, border: 'none', cursor: 'pointer',
-                opacity: submitting ? 0.7 : 1,
-                boxShadow: '0 8px 24px rgba(26,18,8,0.3)',
-              }}
-            >
+            <button onClick={handleSubmit} disabled={submitting}
+              style={{ width: '100%', padding: '18px', borderRadius: 28, background: 'linear-gradient(135deg, #7A5A28, #1A1208)', color: '#D4A840', fontSize: 13, fontWeight: 700, letterSpacing: 2, border: 'none', cursor: 'pointer', opacity: submitting ? 0.7 : 1, boxShadow: '0 8px 24px rgba(26,18,8,0.3)' }}>
               {submitting ? 'GÖNDERİLİYOR...' : 'RANDEVUYU ONAYLA →'}
             </button>
             <p style={{ textAlign: 'center', fontSize: 10, color: '#8A6A48', marginTop: 12 }}>
