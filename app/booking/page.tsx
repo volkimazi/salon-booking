@@ -153,174 +153,155 @@ export default function BookingPage() {
         </div>
       </header>
 
-      <div style={{ background: '#F8F3EC', padding: '14px 20px', borderBottom: '1px solid #D4B89620' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {['Hizmet', 'Tarih & Saat', 'Bilgi', 'Onay'].map((step, i) => {
-            const done = (i === 0 && selectedService) || (i === 1 && form.appointment_time) || (i === 2 && form.customer_phone)
-            const active = i === 0 || (i === 1 && selectedService) || (i === 2 && form.appointment_time) || (i === 3 && form.customer_phone)
-            return (
-              <div key={step} style={{ display: 'flex', alignItems: 'center' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: done ? '#7A5A28' : active ? '#1A1208' : '#D4B89640', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 'bold', color: done || active ? '#D4A840' : '#8A6A48' }}>
-                    {done ? '✓' : i + 1}
-                  </div>
-                  <span style={{ fontSize: 7, color: active ? '#1A1208' : '#AA8A68', letterSpacing: 0.5 }}>{step.toUpperCase()}</span>
-                </div>
-                {i < 3 && <div style={{ width: 28, height: 1, background: done ? '#7A5A28' : '#D4B89640', margin: '0 4px', marginBottom: 16 }} />}
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
       <div style={{ maxWidth: 500, margin: '0 auto', padding: '24px 16px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>HİZMET SEÇİN</p>
+          <h2 style={{ fontSize: 20, fontWeight: 400, color: '#1A1208', margin: 0 }}>Randevu Al</h2>
+        </div>
 
-        {/* HİZMET KARTLARI */}
-        <div style={{ marginBottom: 16 }}>
-          <div style={{ textAlign: 'center', marginBottom: 18 }}>
-            <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 1</p>
-            <h2 style={{ fontSize: 20, fontWeight: 400, color: '#1A1208', margin: 0 }}>Hizmet Seçin</h2>
-          </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {services.map((service) => {
+            const isSelected = form.service_id === service.id
+            const data = SERVICE_DATA[service.name] || DEFAULT_SERVICE
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {services.map((service) => {
-              const isSelected = form.service_id === service.id
-              const data = SERVICE_DATA[service.name] || DEFAULT_SERVICE
+            return (
+              <div key={service.id} style={{ borderRadius: 24, overflow: 'hidden', border: isSelected ? '2px solid #7A5A28' : '2px solid transparent', boxShadow: isSelected ? '0 8px 32px rgba(122,90,40,0.2)' : '0 2px 16px rgba(0,0,0,0.07)', background: 'white' }}>
 
-              return (
-                <div key={service.id} style={{ borderRadius: 20, overflow: 'hidden', border: isSelected ? '2px solid #7A5A28' : '2px solid transparent', boxShadow: isSelected ? '0 8px 28px rgba(122,90,40,0.2)' : '0 2px 16px rgba(0,0,0,0.07)', background: 'white' }}>
-
-                  {/* Fotoğraf */}
-                  <div onClick={() => { setSelectedService(service); setForm(f => ({ ...f, service_id: service.id, appointment_date: '', appointment_time: '' })); setSelectedDate(''); setAvailableSlots([]) }}
-                    style={{ position: 'relative', height: 130, overflow: 'hidden', cursor: 'pointer' }}>
-                    <img src={data.image} alt={service.name} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.7)' }} />
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 0%, rgba(26,18,8,0.7) 100%)' }} />
-                    <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                      <div>
-                        <p style={{ margin: 0, fontWeight: 700, fontSize: 16, color: 'white' }}>{service.name}</p>
-                        <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.7)', background: 'rgba(0,0,0,0.3)', padding: '2px 8px', borderRadius: 8 }}>⏱ {service.duration_minutes} dk</span>
-                      </div>
-                      <p style={{ margin: 0, fontWeight: 700, fontSize: 19, color: '#D4A840' }}>₺{service.price}</p>
+                {/* Fotoğraf */}
+                <div onClick={() => {
+                  setSelectedService(service)
+                  setForm(f => ({ ...f, service_id: service.id, appointment_date: '', appointment_time: '' }))
+                  setSelectedDate('')
+                  setAvailableSlots([])
+                }} style={{ position: 'relative', height: 140, overflow: 'hidden', cursor: 'pointer' }}>
+                  <img src={data.image} alt={service.name} style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.7)' }} />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 0%, rgba(26,18,8,0.75) 100%)' }} />
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                    <div>
+                      <p style={{ margin: 0, fontWeight: 700, fontSize: 17, color: 'white' }}>{service.name}</p>
+                      <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.7)', background: 'rgba(0,0,0,0.3)', padding: '2px 8px', borderRadius: 8 }}>⏱ {service.duration_minutes} dk</span>
                     </div>
-                    {isSelected && (
-                      <div style={{ position: 'absolute', top: 10, right: 10, width: 26, height: 26, borderRadius: '50%', background: '#7A5A28', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span style={{ color: '#D4A840', fontSize: 13, fontWeight: 'bold' }}>✓</span>
-                      </div>
-                    )}
+                    <p style={{ margin: 0, fontWeight: 700, fontSize: 20, color: '#D4A840' }}>₺{service.price}</p>
+                  </div>
+                  {isSelected && (
+                    <div style={{ position: 'absolute', top: 12, right: 12, width: 28, height: 28, borderRadius: '50%', background: '#7A5A28', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <span style={{ color: '#D4A840', fontSize: 14, fontWeight: 'bold' }}>✓</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* İçerik */}
+                <div style={{ padding: '14px 16px', background: isSelected ? '#FAF7F2' : 'white' }}>
+                  <p style={{ margin: '0 0 12px', fontSize: 11, color: '#8A6A48' }}>{service.description}</p>
+
+                  {/* Randevu Al butonu */}
+                  <div onClick={() => {
+                    setSelectedService(service)
+                    setForm(f => ({ ...f, service_id: service.id }))
+                  }} style={{ background: isSelected ? 'linear-gradient(135deg, #7A5A28, #1A1208)' : '#F5F0E8', borderRadius: 12, padding: '11px 14px', textAlign: 'center', cursor: 'pointer', marginBottom: isSelected ? 16 : 0 }}>
+                    <span style={{ fontSize: 11, color: isSelected ? '#D4A840' : '#7A5A28', letterSpacing: 1, fontWeight: 700 }}>
+                      {isSelected ? '✓ SEÇİLDİ' : '📅 RANDEVU AL'}
+                    </span>
                   </div>
 
-                  {/* Alt kısım */}
-                  <div style={{ padding: '12px 16px', background: isSelected ? '#FAF7F2' : 'white' }}>
-                    <p style={{ margin: '0 0 10px', fontSize: 11, color: '#8A6A48' }}>{service.description}</p>
+                  {/* TÜM FORM KART İÇİNDE */}
+                  {isSelected && (
+                    <div style={{ borderTop: '1px solid #D4B89630', paddingTop: 16, display: 'flex', flexDirection: 'column', gap: 16 }}>
 
-                    <div onClick={() => { setSelectedService(service); setForm(f => ({ ...f, service_id: service.id })) }}
-                      style={{ background: isSelected ? 'linear-gradient(135deg, #7A5A28, #1A1208)' : '#F5F0E8', borderRadius: 10, padding: '10px 14px', textAlign: 'center', cursor: 'pointer' }}>
-                      <span style={{ fontSize: 11, color: isSelected ? '#D4A840' : '#7A5A28', letterSpacing: 1, fontWeight: 700 }}>
-                        {isSelected ? '✓ SEÇİLDİ' : '📅 RANDEVU AL'}
-                      </span>
-                    </div>
-
-                    {/* TAKVİM + SAAT — KART İÇİNDE */}
-                    {isSelected && (
-                      <div style={{ marginTop: 16, borderTop: '1px solid #D4B89630', paddingTop: 16 }}>
-                        
-                        {/* Takvim */}
+                      {/* Takvim */}
+                      <div>
                         <p style={{ fontSize: 9, letterSpacing: 3, color: '#7A5A28', margin: '0 0 10px', textAlign: 'center' }}>📅 TARİH SEÇİN</p>
                         <Calendar
                           selected={selectedDate}
                           onSelect={(date) => { setSelectedDate(date); setForm(f => ({ ...f, appointment_date: date, appointment_time: '' })) }}
                         />
+                        {errors.appointment_date && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 6, textAlign: 'center' }}>{errors.appointment_date}</p>}
+                      </div>
 
-                        {/* Saatler */}
-                        {selectedDate && (
-                          <div style={{ marginTop: 16 }}>
-                            <p style={{ fontSize: 9, letterSpacing: 3, color: '#7A5A28', margin: '0 0 10px', textAlign: 'center' }}>🕐 SAAT SEÇİN</p>
-                            {loadingSlots ? (
-                              <p style={{ fontSize: 12, color: '#8A6A48', textAlign: 'center' }}>Yükleniyor...</p>
-                            ) : availableSlots.length === 0 ? (
-                              <p style={{ fontSize: 12, color: '#8A6A48', textAlign: 'center', background: '#F5F0E8', padding: 12, borderRadius: 10 }}>😔 Bu tarihte müsait saat yok.</p>
-                            ) : (
-                              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
-                                {availableSlots.map(slot => (
-                                  <div key={slot} onClick={() => setForm(f => ({ ...f, appointment_time: slot }))}
-                                    style={{ cursor: 'pointer', padding: '10px 4px', borderRadius: 10, textAlign: 'center', fontSize: 13, fontWeight: 600, background: form.appointment_time === slot ? '#1A1208' : '#F5F0E8', color: form.appointment_time === slot ? '#D4A840' : '#1A1208', border: '2px solid', borderColor: form.appointment_time === slot ? '#1A1208' : 'transparent' }}>
-                                    {slot}
+                      {/* Saatler */}
+                      {selectedDate && (
+                        <div>
+                          <p style={{ fontSize: 9, letterSpacing: 3, color: '#7A5A28', margin: '0 0 10px', textAlign: 'center' }}>🕐 SAAT SEÇİN</p>
+                          {loadingSlots ? (
+                            <p style={{ fontSize: 12, color: '#8A6A48', textAlign: 'center' }}>Yükleniyor...</p>
+                          ) : availableSlots.length === 0 ? (
+                            <p style={{ fontSize: 12, color: '#8A6A48', textAlign: 'center', background: '#F5F0E8', padding: 12, borderRadius: 10 }}>😔 Bu tarihte müsait saat yok.</p>
+                          ) : (
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+                              {availableSlots.map(slot => (
+                                <div key={slot} onClick={() => setForm(f => ({ ...f, appointment_time: slot }))}
+                                  style={{ cursor: 'pointer', padding: '10px 4px', borderRadius: 10, textAlign: 'center', fontSize: 13, fontWeight: 600, background: form.appointment_time === slot ? '#1A1208' : '#F5F0E8', color: form.appointment_time === slot ? '#D4A840' : '#1A1208', border: '2px solid', borderColor: form.appointment_time === slot ? '#1A1208' : 'transparent' }}>
+                                  {slot}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                          {errors.appointment_time && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 6, textAlign: 'center' }}>{errors.appointment_time}</p>}
+                        </div>
+                      )}
+
+                      {/* Bilgiler */}
+                      {form.appointment_time && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                          <p style={{ fontSize: 9, letterSpacing: 3, color: '#7A5A28', margin: 0, textAlign: 'center' }}>👤 BİLGİLERİNİZ</p>
+                          <div>
+                            <label style={{ fontSize: 10, color: '#8A6A48', letterSpacing: 1, display: 'block', marginBottom: 5 }}>AD SOYAD</label>
+                            <input type="text" placeholder="Adınız ve soyadınız" value={form.customer_name}
+                              onChange={e => setForm(f => ({ ...f, customer_name: e.target.value }))}
+                              style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 13, boxSizing: 'border-box' }} />
+                            {errors.customer_name && <p style={{ color: '#C0392B', fontSize: 11, margin: '4px 0 0' }}>{errors.customer_name}</p>}
+                          </div>
+                          <div>
+                            <label style={{ fontSize: 10, color: '#8A6A48', letterSpacing: 1, display: 'block', marginBottom: 5 }}>TELEFON</label>
+                            <input type="tel" placeholder="05XX XXX XX XX" value={form.customer_phone}
+                              onChange={e => setForm(f => ({ ...f, customer_phone: e.target.value }))}
+                              style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 13, boxSizing: 'border-box' }} />
+                            {errors.customer_phone && <p style={{ color: '#C0392B', fontSize: 11, margin: '4px 0 0' }}>{errors.customer_phone}</p>}
+                          </div>
+                          <div>
+                            <label style={{ fontSize: 10, color: '#8A6A48', letterSpacing: 1, display: 'block', marginBottom: 5 }}>NOT (İSTEĞE BAĞLI)</label>
+                            <textarea placeholder="Özel bir isteğiniz var mı?" value={form.customer_note} rows={2}
+                              onChange={e => setForm(f => ({ ...f, customer_note: e.target.value }))}
+                              style={{ width: '100%', padding: '12px 14px', borderRadius: 10, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 13, resize: 'none', boxSizing: 'border-box' }} />
+                          </div>
+
+                          {/* Özet */}
+                          {form.customer_phone && (
+                            <div>
+                              <div style={{ background: '#1A1208', borderRadius: 14, padding: 16, marginBottom: 10 }}>
+                                <p style={{ fontSize: 9, color: '#D4A840', letterSpacing: 3, marginBottom: 12, textAlign: 'center' }}>RANDEVU ÖZETİ</p>
+                                {[
+                                  ['💅 Hizmet', service.name],
+                                  ['📅 Tarih', selectedDate.split('-').reverse().join('.')],
+                                  ['🕐 Saat', form.appointment_time],
+                                  ['💰 Ücret', `₺${service.price}`],
+                                ].map(([k, v]) => (
+                                  <div key={String(k)} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, paddingBottom: 8, borderBottom: '1px solid #ffffff10' }}>
+                                    <span style={{ fontSize: 11, color: '#6A5A40' }}>{k}</span>
+                                    <span style={{ fontSize: 11, fontWeight: 700, color: String(k).includes('Ücret') ? '#D4A840' : '#F0E0B0' }}>{v}</span>
                                   </div>
                                 ))}
                               </div>
-                            )}
-                            {errors.appointment_time && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 6, textAlign: 'center' }}>{errors.appointment_time}</p>}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                              {errors.general && <p style={{ color: '#C0392B', fontSize: 11, marginBottom: 8, textAlign: 'center' }}>{errors.general}</p>}
+                              <button onClick={handleSubmit} disabled={submitting}
+                                style={{ width: '100%', padding: '16px', borderRadius: 24, background: 'linear-gradient(135deg, #7A5A28, #1A1208)', color: '#D4A840', fontSize: 12, fontWeight: 700, letterSpacing: 2, border: 'none', cursor: 'pointer', opacity: submitting ? 0.7 : 1, boxShadow: '0 8px 24px rgba(26,18,8,0.3)' }}>
+                                {submitting ? 'GÖNDERİLİYOR...' : 'RANDEVUYU ONAYLA →'}
+                              </button>
+                              <p style={{ textAlign: 'center', fontSize: 10, color: '#8A6A48', marginTop: 10 }}>
+                                Randevu sonrası WhatsApp ile onay gelecektir
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
-              )
-            })}
-          </div>
-          {errors.service_id && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 8, textAlign: 'center' }}>{errors.service_id}</p>}
+              </div>
+            )
+          })}
         </div>
-
-        {/* BİLGİLER */}
-        {form.appointment_time && (
-          <div style={{ marginBottom: 24, background: 'white', borderRadius: 20, padding: 20, boxShadow: '0 2px 16px rgba(0,0,0,0.07)' }}>
-            <div style={{ textAlign: 'center', marginBottom: 16 }}>
-              <p style={{ fontSize: 9, letterSpacing: 4, color: '#7A5A28', margin: '0 0 4px' }}>ADIM 2</p>
-              <h2 style={{ fontSize: 18, fontWeight: 400, color: '#1A1208', margin: 0 }}>Bilgileriniz</h2>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div>
-                <label style={{ fontSize: 10, color: '#8A6A48', letterSpacing: 1, display: 'block', marginBottom: 6 }}>AD SOYAD</label>
-                <input type="text" placeholder="Adınız ve soyadınız" value={form.customer_name}
-                  onChange={e => setForm(f => ({ ...f, customer_name: e.target.value }))}
-                  style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, boxSizing: 'border-box' }} />
-                {errors.customer_name && <p style={{ color: '#C0392B', fontSize: 11, margin: '4px 0 0' }}>{errors.customer_name}</p>}
-              </div>
-              <div>
-                <label style={{ fontSize: 10, color: '#8A6A48', letterSpacing: 1, display: 'block', marginBottom: 6 }}>TELEFON</label>
-                <input type="tel" placeholder="05XX XXX XX XX" value={form.customer_phone}
-                  onChange={e => setForm(f => ({ ...f, customer_phone: e.target.value }))}
-                  style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, boxSizing: 'border-box' }} />
-                {errors.customer_phone && <p style={{ color: '#C0392B', fontSize: 11, margin: '4px 0 0' }}>{errors.customer_phone}</p>}
-              </div>
-              <div>
-                <label style={{ fontSize: 10, color: '#8A6A48', letterSpacing: 1, display: 'block', marginBottom: 6 }}>NOT (İSTEĞE BAĞLI)</label>
-                <textarea placeholder="Özel bir isteğiniz var mı?" value={form.customer_note} rows={3}
-                  onChange={e => setForm(f => ({ ...f, customer_note: e.target.value }))}
-                  style={{ width: '100%', padding: '13px 16px', borderRadius: 12, border: '2px solid #D4B89640', background: '#FAF8F5', fontSize: 14, resize: 'none', boxSizing: 'border-box' }} />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ÖZET + GÖNDER */}
-        {form.customer_phone && (
-          <div>
-            <div style={{ background: '#1A1208', borderRadius: 20, padding: 20, marginBottom: 12 }}>
-              <p style={{ fontSize: 9, color: '#D4A840', letterSpacing: 3, marginBottom: 14, textAlign: 'center' }}>RANDEVU ÖZETİ</p>
-              {[
-                ['💅 Hizmet', selectedService?.name],
-                ['📅 Tarih', selectedDate ? selectedDate.split('-').reverse().join('.') : ''],
-                ['🕐 Saat', form.appointment_time],
-                ['💰 Ücret', `₺${selectedService?.price}`],
-              ].map(([k, v]) => (
-                <div key={String(k)} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10, paddingBottom: 10, borderBottom: '1px solid #ffffff10' }}>
-                  <span style={{ fontSize: 12, color: '#6A5A40' }}>{k}</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: String(k).includes('Ücret') ? '#D4A840' : '#F0E0B0' }}>{v}</span>
-                </div>
-              ))}
-            </div>
-            {errors.general && <p style={{ color: '#C0392B', fontSize: 12, marginBottom: 10, textAlign: 'center' }}>{errors.general}</p>}
-            <button onClick={handleSubmit} disabled={submitting}
-              style={{ width: '100%', padding: '18px', borderRadius: 28, background: 'linear-gradient(135deg, #7A5A28, #1A1208)', color: '#D4A840', fontSize: 13, fontWeight: 700, letterSpacing: 2, border: 'none', cursor: 'pointer', opacity: submitting ? 0.7 : 1, boxShadow: '0 8px 24px rgba(26,18,8,0.3)' }}>
-              {submitting ? 'GÖNDERİLİYOR...' : 'RANDEVUYU ONAYLA →'}
-            </button>
-            <p style={{ textAlign: 'center', fontSize: 10, color: '#8A6A48', marginTop: 12 }}>
-              Randevu sonrası WhatsApp ile onay gelecektir
-            </p>
-          </div>
-        )}
+        {errors.service_id && <p style={{ color: '#C0392B', fontSize: 11, marginTop: 8, textAlign: 'center' }}>{errors.service_id}</p>}
       </div>
     </main>
   )
