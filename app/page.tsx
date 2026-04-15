@@ -11,150 +11,191 @@ export default async function HomePage() {
     .order('price', { ascending: true })
 
   return (
-    <main style={{ fontFamily: "'Palatino', 'Book Antiqua', serif" }} className="min-h-screen bg-[#E8E0D4]">
+    <main style={{ fontFamily: "'Cormorant Garamond', 'Georgia', serif", background: "#FAFAF8" }}>
 
       {/* HEADER */}
-      <header className="sticky top-0 z-50 flex justify-between items-center px-5 py-4 bg-[#F8F3EC] border-b border-[#D4B89630]">
-        <div className="flex items-center gap-3">
-          <div className="w-11 h-11 rounded-lg flex items-center justify-center shadow-md" style={{ background: "linear-gradient(145deg, #1A1208, #2C1E0A)" }}>
-            <span style={{ color: "#D4A840", fontSize: 16, fontFamily: "serif" }} className="font-bold">ℬℬ</span>
+      <header style={{ background: "white", borderBottom: "1px solid #E8E0D0", padding: "16px 40px", display: "flex", justifyContent: "space-between", alignItems: "center", position: "sticky", top: 0, zIndex: 50, boxShadow: "0 2px 20px rgba(0,0,0,0.04)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <div style={{ width: 48, height: 48, background: "linear-gradient(135deg, #C8A84B, #A07830)", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 8, boxShadow: "0 4px 16px rgba(200,168,75,0.35)" }}>
+            <span style={{ color: "white", fontSize: 16, fontWeight: "bold", fontFamily: "serif" }}>BB</span>
           </div>
           <div>
-            <p className="text-xs font-bold tracking-[0.2em] text-[#1A1208] mb-0">BURCU BOZKIR</p>
-            <p className="text-[8px] tracking-widest text-[#7A5A28]">BEAUTY STUDIO</p>
+            <p style={{ margin: 0, fontSize: 14, fontWeight: 700, letterSpacing: 3, color: "#1A1208" }}>BURCU BOZKIR</p>
+            <p style={{ margin: 0, fontSize: 9, letterSpacing: 4, color: "#C8A84B" }}>BEAUTY STUDIO</p>
           </div>
         </div>
-        <Link href="/booking" className="text-[#D4A840] text-[8px] px-4 py-2.5 rounded-full tracking-widest" style={{ background: "#1A1208" }}>
-          RANDEVU AL
-        </Link>
+        <nav style={{ display: "flex", gap: 32, alignItems: "center" }}>
+          <a href="tel:02124244151" style={{ fontSize: 12, color: "#888", textDecoration: "none", letterSpacing: 1 }}>📞 0212 424 41 51</a>
+          <Link href="/booking" style={{ background: "linear-gradient(135deg, #C8A84B, #A07830)", color: "white", fontSize: 10, padding: "12px 24px", letterSpacing: 3, textDecoration: "none", boxShadow: "0 4px 16px rgba(200,168,75,0.3)" }}>
+            RANDEVU AL
+          </Link>
+        </nav>
       </header>
 
       {/* HERO */}
-      <section className="relative overflow-hidden text-center px-6 pt-12 pb-10" style={{ background: "linear-gradient(180deg, #F8F3EC 0%, #E8E0D4 100%)" }}>
-        <div className="absolute top-0 right-0 w-40 h-40 rounded-full opacity-20" style={{ background: "#D4B896", transform: "translate(40px, -40px)" }} />
-        <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full opacity-10" style={{ background: "#7A5A28", transform: "translate(-20px, 20px)" }} />
+      <section style={{ position: "relative", minHeight: "90vh", background: "linear-gradient(135deg, #FDFCFA 0%, #F8F4EE 40%, #F0E8DC 100%)", display: "flex", alignItems: "center", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(ellipse at 20% 50%, rgba(200,168,75,0.06) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(200,168,75,0.08) 0%, transparent 50%)" }} />
+        <div style={{ position: "absolute", top: 0, right: "38%", bottom: 0, width: 1, background: "linear-gradient(to bottom, transparent, rgba(200,168,75,0.12), transparent)" }} />
 
-        <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-xl" style={{ background: "linear-gradient(145deg, #1A1208, #2C1E0A)" }}>
-          <span style={{ color: "#D4A840", fontSize: 30, fontFamily: "serif" }} className="font-bold">ℬℬ</span>
-        </div>
+        <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 0, width: "100%", maxWidth: 1200, margin: "0 auto", padding: "0 60px" }}>
+          {/* Sol metin */}
+          <div style={{ paddingRight: 80, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 28 }}>
+              <div style={{ width: 32, height: 1, background: "#C8A84B" }} />
+              <p style={{ margin: 0, fontSize: 9, letterSpacing: 5, color: "#C8A84B" }}>SEFAKöY · METROPARK AVM · İSTANBUL</p>
+            </div>
+            <h1 style={{ margin: "0 0 20px", fontSize: 56, fontWeight: 300, lineHeight: 1.1, color: "#1A1208", letterSpacing: -1 }}>
+              Güzelliğin<br />En İnce<br /><em style={{ color: "#C8A84B", fontWeight: 400 }}>Hali</em>
+            </h1>
+            <p style={{ margin: "0 0 36px", fontSize: 14, color: "#8A7A68", lineHeight: 1.8, maxWidth: 400 }}>
+              Profesyonel kalıcı makyaj, kaş ve kirpik laminasyon hizmetleriyle doğal güzelliğinizi ön plana çıkarıyoruz.
+            </p>
+            <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+              <Link href="/booking" style={{ background: "linear-gradient(135deg, #C8A84B, #A07830)", color: "white", padding: "16px 36px", fontSize: 11, letterSpacing: 4, textDecoration: "none", boxShadow: "0 8px 28px rgba(200,168,75,0.35)" }}>
+                RANDEVU AL
+              </Link>
+              <a href="tel:02124244151" style={{ border: "1px solid #C8A84B", color: "#C8A84B", padding: "15px 24px", fontSize: 11, letterSpacing: 2, textDecoration: "none" }}>
+                📞 ARA
+              </a>
+            </div>
 
-        <div className="inline-block rounded-full px-4 py-1.5 mb-5 border" style={{ background: "#7A5A2815", borderColor: "#7A5A2830" }}>
-          <span className="text-[9px] tracking-widest text-[#7A5A28]">✦ METROPARK AVM · SEFAKöY ✦</span>
-        </div>
-
-        <h1 className="text-4xl font-light leading-tight mb-4 text-[#1A1208]">
-          Güzelliğiniz<br />Bizim <em className="text-[#7A5A28]">Tutkumuz</em>
-        </h1>
-        <p className="text-sm text-[#6A4A28] leading-relaxed max-w-xs mx-auto mb-8">
-          Profesyonel kalıcı makyaj ve laminasyon hizmetleriyle doğal güzelliğinizi ön plana çıkarıyoruz.
-        </p>
-        <div className="flex flex-col items-center gap-3">
-          <Link href="/booking" className="text-[#D4A840] text-xs px-9 py-4 rounded-full tracking-widest shadow-lg" style={{ background: "#1A1208" }}>
-            HEMEN RANDEVU AL →
-          </Link>
-          <a href="https://www.instagram.com/burcubozkir_beauty" target="_blank" className="text-[9px] text-[#7A5A28] tracking-widest">
-            Instagram'da Gör ↗
-          </a>
-        </div>
-      </section>
-
-      {/* AYIRICI */}
-      <div className="h-px mx-6" style={{ background: "linear-gradient(90deg, transparent, #D4B896, transparent)" }} />
-
-      {/* STATS */}
-      <section className="grid grid-cols-3 gap-3 px-5 py-6">
-        {[
-          ["1.200+", "Mutlu Müşteri"],
-          ["5 Yıl", "Deneyim"],
-          ["25.9K", "Takipçi"],
-        ].map(([v, l]) => (
-          <div key={l} className="rounded-xl py-4 text-center shadow-sm" style={{ background: "#F8F3EC" }}>
-            <p className="text-lg font-medium text-[#7A5A28] mb-1">{v}</p>
-            <p className="text-[8px] tracking-wider text-[#6A4A28]">{l}</p>
+            {/* Stats */}
+            <div style={{ display: "flex", gap: 40, marginTop: 52, paddingTop: 36, borderTop: "1px solid #E8E0D0" }}>
+              {[["1.200+", "Mutlu Müşteri"], ["5 Yıl", "Deneyim"], ["25.9K", "Takipçi"]].map(([v, l]) => (
+                <div key={l}>
+                  <p style={{ margin: "0 0 4px", fontSize: 28, color: "#C8A84B", fontWeight: 300 }}>{v}</p>
+                  <p style={{ margin: 0, fontSize: 9, color: "#AAA", letterSpacing: 2 }}>{l.toUpperCase()}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
+
+          {/* Sağ foto */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ width: "100%", maxWidth: 420, position: "relative" }}>
+              <div style={{ background: "linear-gradient(145deg, #F0E8DC, #E8DDD0)", height: 500, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", boxShadow: "0 20px 60px rgba(0,0,0,0.08)" }}>
+                <div style={{ position: "absolute", top: 20, left: 20, width: 36, height: 36, borderTop: "1px solid #C8A84B", borderLeft: "1px solid #C8A84B" }} />
+                <div style={{ position: "absolute", bottom: 20, right: 20, width: 36, height: 36, borderBottom: "1px solid #C8A84B", borderRight: "1px solid #C8A84B" }} />
+                <div style={{ textAlign: "center" }}>
+                  <p style={{ color: "#C8A84B", fontSize: 40, marginBottom: 8 }}>✦</p>
+                  <p style={{ color: "#C0B090", fontSize: 10, letterSpacing: 3 }}>SALON FOTOĞRAFI</p>
+                  <p style={{ color: "#D4C4A0", fontSize: 9, marginTop: 4 }}>Burcu hanımdan gelecek</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* HİZMETLER */}
-      <section className="px-5 pb-8">
-        <p className="text-[9px] tracking-[0.3em] text-[#7A5A28] text-center mb-5">HİZMETLERİMİZ</p>
-        <div className="flex flex-col gap-3">
-          {(services as Service[])?.map((service, i) => (
-            <div key={service.id} className="rounded-2xl p-4 shadow-sm" style={{ background: "#F8F3EC" }}>
-              <div className="flex justify-between items-start">
-                <div className="flex gap-3 items-start">
-                  <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "linear-gradient(145deg, #1A1208, #2C1E0A)" }}>
-                    <span style={{ color: "#D4A840" }} className="text-[8px] font-bold">{String(i + 1).padStart(2, '0')}</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-[#1A1208] mb-0.5">{service.name}</p>
-                    <p className="text-[9px] text-[#8A6A48]">{service.description}</p>
-                    <p className="text-[8px] text-[#AA8A68] mt-0.5">{service.duration_minutes} dk</p>
-                  </div>
-                </div>
-                <p className="text-sm font-bold text-[#7A5A28] flex-shrink-0">₺{service.price}</p>
-              </div>
+      <section style={{ background: "white", padding: "80px 60px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: 60 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 20, justifyContent: "center", marginBottom: 16 }}>
+              <div style={{ width: 60, height: 1, background: "#C8A84B" }} />
+              <p style={{ margin: 0, fontSize: 9, letterSpacing: 5, color: "#C8A84B" }}>HİZMETLERİMİZ</p>
+              <div style={{ width: 60, height: 1, background: "#C8A84B" }} />
             </div>
-          ))}
-        </div>
-        <div className="text-center mt-5">
-          <Link href="/booking" className="inline-block border text-[#1A1208] border-[#1A1208] text-[9px] px-6 py-2.5 rounded-full tracking-widest">
-            TÜM HİZMETLER İÇİN RANDEVU AL
-          </Link>
+            <h2 style={{ margin: 0, fontSize: 40, fontWeight: 300, color: "#1A1208" }}>Ne Yapmamızı İstersiniz?</h2>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
+            {(services as Service[])?.map((service, i) => (
+              <div key={service.id} style={{ border: "1px solid #E8E0D0", padding: "36px 28px", position: "relative", background: "#FAFAF8" }}>
+                <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg, #C8A84B, #F0D080)" }} />
+                <div style={{ width: 40, height: 40, background: "linear-gradient(135deg, #C8A84B, #A07830)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
+                  <span style={{ color: "white", fontSize: 12, fontWeight: 700 }}>0{i + 1}</span>
+                </div>
+                <h3 style={{ margin: "0 0 12px", fontSize: 20, fontWeight: 500, color: "#1A1208" }}>{service.name}</h3>
+                <p style={{ margin: "0 0 24px", fontSize: 12, color: "#8A7A68", lineHeight: 1.7 }}>{service.description}</p>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: 20, borderTop: "1px solid #E8E0D0" }}>
+                  <span style={{ fontSize: 10, color: "#AAA", letterSpacing: 1 }}>⏱ {service.duration_minutes} dk</span>
+                  <span style={{ fontSize: 22, color: "#C8A84B", fontWeight: 400 }}>₺{service.price}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ textAlign: "center", marginTop: 40 }}>
+            <Link href="/booking" style={{ display: "inline-block", background: "linear-gradient(135deg, #C8A84B, #A07830)", color: "white", padding: "16px 40px", fontSize: 11, letterSpacing: 4, textDecoration: "none", boxShadow: "0 8px 28px rgba(200,168,75,0.3)" }}>
+              RANDEVU AL
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* NEDEN BIZ */}
-      <section className="py-8 px-5 relative overflow-hidden" style={{ background: "#1A1208" }}>
-        <p className="text-[9px] tracking-[0.3em] text-center mb-2" style={{ color: "#D4A840" }}>NEDEN BURCU BOZKIR?</p>
-        <p className="text-xl font-light text-center mb-7" style={{ color: "#F0E0B0" }}>Fark Yaratan Detaylar</p>
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            ["✦", "Uzman Eller", "5 yıllık profesyonel deneyim"],
-            ["✦", "Hijyenik Ortam", "Steril ekipman ve malzeme"],
-            ["✦", "Doğal Sonuç", "Kişiye özel uygulama"],
-          ].map(([icon, title, desc]) => (
-            <div key={title} className="text-center">
-              <p className="text-lg mb-2" style={{ color: "#D4A840" }}>{icon}</p>
-              <p className="text-[10px] font-semibold mb-1 tracking-wide" style={{ color: "#F0E0B0" }}>{title}</p>
-              <p className="text-[8px] leading-relaxed" style={{ color: "#6A5A40" }}>{desc}</p>
+      {/* NEDEN BİZ */}
+      <section style={{ background: "linear-gradient(135deg, #1A1208 0%, #2C1E0A 100%)", padding: "80px 60px", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(ellipse at 50% 0%, rgba(200,168,75,0.1) 0%, transparent 60%)" }} />
+        <div style={{ maxWidth: 1200, margin: "0 auto", position: "relative" }}>
+          <div style={{ textAlign: "center", marginBottom: 60 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 20, justifyContent: "center", marginBottom: 16 }}>
+              <div style={{ width: 60, height: 1, background: "rgba(200,168,75,0.3)" }} />
+              <p style={{ margin: 0, fontSize: 9, letterSpacing: 5, color: "#C8A84B" }}>NEDEN BURCU BOZKIR?</p>
+              <div style={{ width: 60, height: 1, background: "rgba(200,168,75,0.3)" }} />
             </div>
-          ))}
+            <h2 style={{ margin: 0, fontSize: 40, fontWeight: 300, color: "white" }}>Fark Yaratan Detaylar</h2>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 32 }}>
+            {[
+              ["✦", "Uzman Eller", "5 yıllık profesyonel deneyim ve sürekli güncellenen teknikler"],
+              ["✦", "Hijyenik Ortam", "Her işlemde tek kullanımlık malzeme ve steril ekipman"],
+              ["✦", "Doğal Sonuç", "Yüz hatlarınıza özel, kişiselleştirilmiş uygulama"],
+            ].map(([icon, title, desc]) => (
+              <div key={String(title)} style={{ textAlign: "center", padding: "36px 24px", border: "1px solid rgba(200,168,75,0.12)", background: "rgba(200,168,75,0.04)" }}>
+                <p style={{ margin: "0 0 16px", fontSize: 24, color: "#C8A84B" }}>{icon}</p>
+                <h3 style={{ margin: "0 0 12px", fontSize: 16, fontWeight: 500, color: "white", letterSpacing: 2 }}>{title}</h3>
+                <p style={{ margin: 0, fontSize: 11, color: "#6A5A40", lineHeight: 1.8 }}>{desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* KONUM */}
-      <section className="px-5 py-8 text-center">
-        <p className="text-[9px] tracking-[0.3em] text-[#7A5A28] mb-1">BİZİ BULUN</p>
-        <p className="text-2xl font-light text-[#1A1208] mb-5">Neredeyiz?</p>
-        <div className="rounded-2xl p-6 shadow-sm" style={{ background: "#F8F3EC" }}>
-       <footer className="py-8 px-6 text-center border-t" style={{ background: "#1A1208", borderColor: "#D4A84020" }}>
-  <div className="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3 border" style={{ background: "#2C1E0A", borderColor: "#D4A84030" }}>
-    <span style={{ color: "#D4A840", fontFamily: "serif" }} className="text-base font-bold">BB</span>
-  </div>
-  <p className="text-[9px] tracking-widest mb-1" style={{ color: "#D4A840" }}>BURCU BOZKIR BEAUTY STUDIO</p>
-  <p className="text-[9px] mb-1" style={{ color: "#4A3A28" }}>Metropark AVM D1-112, Sefaköy / İstanbul</p>
-  <a href="tel:02124244151" style={{ color: "#D4A840", fontSize: 11, textDecoration: "none" }}>📞 0212 424 41 51</a>
-  <p className="text-[9px] text-[#4A3A28] mt-1">© 2025 · Tüm hakları saklıdır</p>
-</footer>
-          <div className="flex gap-2 justify-center">
-            <Link href="/booking" className="text-[#D4A840] text-[9px] px-5 py-2.5 rounded-full tracking-widest" style={{ background: "#1A1208" }}>
-              RANDEVU AL
-            </Link>
-            <a href="https://wa.me/905319242660" target="_blank" className="text-[9px] text-[#7A5A28] px-5 py-2.5 rounded-full tracking-widest border border-[#D4B896]">
-              WHATSAPP
-            </a>
+      <section style={{ background: "white", padding: "80px 60px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+              <div style={{ width: 32, height: 1, background: "#C8A84B" }} />
+              <p style={{ margin: 0, fontSize: 9, letterSpacing: 5, color: "#C8A84B" }}>BİZİ BULUN</p>
+            </div>
+            <h2 style={{ margin: "0 0 20px", fontSize: 40, fontWeight: 300, color: "#1A1208" }}>Neredeyiz?</h2>
+            <p style={{ margin: "0 0 6px", fontSize: 18, color: "#1A1208" }}>Metropark AVM</p>
+            <p style={{ margin: "0 0 4px", fontSize: 13, color: "#8A7A68" }}>D1-112 · -2. Kat</p>
+            <p style={{ margin: "0 0 6px", fontSize: 13, color: "#8A7A68" }}>Sefaköy · İstanbul</p>
+            <a href="tel:02124244151" style={{ display: "block", fontSize: 16, color: "#C8A84B", textDecoration: "none", marginBottom: 36, fontWeight: 500 }}>📞 0212 424 41 51</a>
+            <div style={{ display: "flex", gap: 14 }}>
+              <Link href="/booking" style={{ background: "linear-gradient(135deg, #C8A84B, #A07830)", color: "white", padding: "14px 28px", fontSize: 10, letterSpacing: 3, textDecoration: "none", boxShadow: "0 6px 20px rgba(200,168,75,0.3)" }}>
+                RANDEVU AL
+              </Link>
+              <a href="https://wa.me/905302223553" target="_blank" style={{ border: "1px solid #C8A84B", color: "#C8A84B", padding: "13px 20px", fontSize: 10, letterSpacing: 2, textDecoration: "none" }}>
+                WHATSAPP
+              </a>
+            </div>
+          </div>
+          <div style={{ background: "linear-gradient(145deg, #F8F4EE, #F0E8DC)", height: 360, display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+            <div style={{ position: "absolute", top: 20, left: 20, width: 28, height: 28, borderTop: "1px solid #C8A84B", borderLeft: "1px solid #C8A84B" }} />
+            <div style={{ position: "absolute", bottom: 20, right: 20, width: 28, height: 28, borderBottom: "1px solid #C8A84B", borderRight: "1px solid #C8A84B" }} />
+            <div style={{ textAlign: "center" }}>
+              <p style={{ color: "#C8A84B", fontSize: 32, marginBottom: 8 }}>📍</p>
+              <p style={{ color: "#C0B090", fontSize: 10, letterSpacing: 3 }}>HARİTA</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="py-6 px-5 text-center border-t" style={{ background: "#1A1208", borderColor: "#D4A84020" }}>
-        <div className="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3 border" style={{ background: "#2C1E0A", borderColor: "#D4A84030" }}>
-          <span style={{ color: "#D4A840", fontFamily: "serif" }} className="text-base font-bold">ℬℬ</span>
+      <footer style={{ background: "#1A1208", padding: "40px 60px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+          <div style={{ width: 40, height: 40, background: "linear-gradient(135deg, #C8A84B, #A07830)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ color: "white", fontSize: 12, fontWeight: "bold", fontFamily: "serif" }}>BB</span>
+          </div>
+          <div>
+            <p style={{ margin: 0, fontSize: 11, letterSpacing: 3, color: "#C8A84B" }}>BURCU BOZKIR BEAUTY STUDIO</p>
+            <p style={{ margin: 0, fontSize: 9, color: "#4A3A20" }}>Metropark AVM D1-112, Sefaköy / İstanbul</p>
+            <a href="tel:02124244151" style={{ color: "#C8A84B", fontSize: 10, textDecoration: "none" }}>📞 0212 424 41 51</a>
+          </div>
         </div>
-        <p className="text-[9px] tracking-widest mb-1" style={{ color: "#D4A840" }}>BURCU BOZKIR BEAUTY STUDIO</p>
-        <p className="text-[9px] text-[#4A3A28]">© 2025 · Metropark AVM, Sefaköy İstanbul</p>
+        <p style={{ margin: 0, fontSize: 9, color: "#4A3A20" }}>© 2025 · Tüm hakları saklıdır</p>
       </footer>
     </main>
   )
