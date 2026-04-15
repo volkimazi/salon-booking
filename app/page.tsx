@@ -73,15 +73,22 @@ export default async function HomePage() {
           {/* Sağ foto */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
             <div style={{ width: "100%", maxWidth: 420, position: "relative" }}>
-              <div style={{ background: "linear-gradient(145deg, #F0E8DC, #E8DDD0)", height: 500, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", boxShadow: "0 20px 60px rgba(0,0,0,0.08)" }}>
-                <div style={{ position: "absolute", top: 20, left: 20, width: 36, height: 36, borderTop: "1px solid #C8A84B", borderLeft: "1px solid #C8A84B" }} />
-                <div style={{ position: "absolute", bottom: 20, right: 20, width: 36, height: 36, borderBottom: "1px solid #C8A84B", borderRight: "1px solid #C8A84B" }} />
-                <div style={{ textAlign: "center" }}>
-                  <p style={{ color: "#C8A84B", fontSize: 40, marginBottom: 8 }}>✦</p>
-                  <p style={{ color: "#C0B090", fontSize: 10, letterSpacing: 3 }}>SALON FOTOĞRAFI</p>
-                  <p style={{ color: "#D4C4A0", fontSize: 9, marginTop: 4 }}>Burcu hanımdan gelecek</p>
-                </div>
-              </div>
+  <a 
+  href="https://maps.google.com/?q=Metropark+AVM+Sefakoy+Istanbul" 
+  target="_blank" 
+  style={{ display: "block", position: "relative", height: 360, overflow: "hidden", textDecoration: "none", cursor: "pointer", background: "linear-gradient(145deg, #F8F4EE, #F0E8DC)" }}
+>
+  <div style={{ position: "absolute", top: 20, left: 20, width: 28, height: 28, borderTop: "1px solid #C8A84B", borderLeft: "1px solid #C8A84B" }} />
+  <div style={{ position: "absolute", bottom: 20, right: 20, width: 28, height: 28, borderBottom: "1px solid #C8A84B", borderRight: "1px solid #C8A84B" }} />
+  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "100%", gap: 12 }}>
+    <p style={{ color: "#C8A84B", fontSize: 48, margin: 0 }}>📍</p>
+    <p style={{ color: "#1A1208", fontSize: 16, fontWeight: 600, margin: 0 }}>Metropark AVM</p>
+    <p style={{ color: "#8A7A68", fontSize: 12, margin: 0 }}>D1-112 · Sefaköy / İstanbul</p>
+    <div style={{ marginTop: 8, background: "linear-gradient(135deg, #C8A84B, #A07830)", color: "white", padding: "10px 24px", fontSize: 11, letterSpacing: 2 }}>
+      Google Maps'te Aç →
+    </div>
+  </div>
+</a>
             </div>
           </div>
         </div>
