@@ -128,9 +128,15 @@ export default async function HomePage() {
         <p className="text-[9px] tracking-[0.3em] text-[#7A5A28] mb-1">BİZİ BULUN</p>
         <p className="text-2xl font-light text-[#1A1208] mb-5">Neredeyiz?</p>
         <div className="rounded-2xl p-6 shadow-sm" style={{ background: "#F8F3EC" }}>
-          <p className="text-base font-medium text-[#1A1208] mb-1">Metropark AVM</p>
-          <p className="text-[10px] text-[#8A6A48]">D1-112 · -2. Kat</p>
-          <p className="text-[10px] text-[#8A6A48] mb-5">Sefaköy · İstanbul</p>
+       <footer className="py-8 px-6 text-center border-t" style={{ background: "#1A1208", borderColor: "#D4A84020" }}>
+  <div className="w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-3 border" style={{ background: "#2C1E0A", borderColor: "#D4A84030" }}>
+    <span style={{ color: "#D4A840", fontFamily: "serif" }} className="text-base font-bold">BB</span>
+  </div>
+  <p className="text-[9px] tracking-widest mb-1" style={{ color: "#D4A840" }}>BURCU BOZKIR BEAUTY STUDIO</p>
+  <p className="text-[9px] mb-1" style={{ color: "#4A3A28" }}>Metropark AVM D1-112, Sefaköy / İstanbul</p>
+  <a href="tel:02124244151" style={{ color: "#D4A840", fontSize: 11, textDecoration: "none" }}>📞 0212 424 41 51</a>
+  <p className="text-[9px] text-[#4A3A28] mt-1">© 2025 · Tüm hakları saklıdır</p>
+</footer>
           <div className="flex gap-2 justify-center">
             <Link href="/booking" className="text-[#D4A840] text-[9px] px-5 py-2.5 rounded-full tracking-widest" style={{ background: "#1A1208" }}>
               RANDEVU AL
